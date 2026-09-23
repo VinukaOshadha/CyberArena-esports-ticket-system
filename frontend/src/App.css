@@ -64,3 +64,131 @@ body {
   font-size: 18px;
   color: #b6ffc8;
 }
+
+.home {
+  padding-top: 70px;
+}
+
+.hero {
+  max-width: 800px;
+  margin: 60px 0 100px;
+}
+
+.small-title {
+  letter-spacing: 4px;
+  font-size: 14px;
+}
+
+.hero h1 {
+  font-size: 64px;
+  margin: 15px 0;
+
+  text-shadow:
+    0 0 8px #39ff6f,
+    0 0 20px #39ff6f;
+}
+
+.hero-description {
+  max-width: 650px;
+
+  color: #b6ffc8;
+
+  font-size: 18px;
+
+  line-height: 1.7;
+
+  margin-bottom: 40px;
+}
+
+.main-button {
+  display: inline-block;
+
+  background: transparent;
+
+  border: 2px solid #39ff6f;
+
+  color: #39ff6f;
+
+  text-decoration: none;
+
+  padding: 15px 25px;
+
+  font-weight: bold;
+
+  transition: 0.3s;
+}
+
+.main-button:hover {
+  background: #39ff6f;
+
+  color: #020702;
+
+  box-shadow: 0 0 20px #39ff6f;
+}
+
+.features {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 30px;
+
+  margin-bottom: 80px;
+}
+
+.feature-card {
+  border: 1px solid #39ff6f;
+
+  padding: 30px;
+
+  background:
+    rgba(57, 255, 111, 0.03);
+
+  transition: 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 0 20px
+    rgba(57, 255, 111, 0.35);
+}
+
+.feature-card h2 {
+  margin-top: 0;
+}
+
+.feature-card p {
+  color: #b6ffc8;
+
+  line-height: 1.6;
+}
+
+@media (max-width: 850px) {
+
+  .app {
+    padding: 20px;
+  }
+
+  .navbar {
+    flex-direction: column;
+
+    gap: 20px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+
+    justify-content: center;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+}
