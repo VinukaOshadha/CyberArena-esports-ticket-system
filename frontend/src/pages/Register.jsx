@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 
-function Login() {
+function Register() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
     alert(
-      'Backend authentication will be connected later.'
+      'Backend registration will be connected later.'
     );
   };
 
@@ -16,12 +16,20 @@ function Login() {
       <div className="auth-card">
 
         <p className="small-title">
-          PLAYER ACCESS
+          JOIN THE NETWORK
         </p>
 
-        <h1>LOGIN</h1>
+        <h1>REGISTER</h1>
 
         <form onSubmit={handleSubmit}>
+
+          <label>Player Name</label>
+
+          <input
+            type="text"
+            placeholder="Enter player name"
+            required
+          />
 
           <label>Email</label>
 
@@ -35,7 +43,8 @@ function Login() {
 
           <input
             type="password"
-            placeholder="Enter password"
+            placeholder="Minimum 6 characters"
+            minLength="6"
             required
           />
 
@@ -43,17 +52,17 @@ function Login() {
             type="submit"
             className="auth-submit"
           >
-            LOGIN
+            CREATE ACCOUNT
           </button>
 
         </form>
 
         <p className="auth-link">
 
-          New player?{' '}
+          Already registered?{' '}
 
-          <Link to="/register">
-            Create Account
+          <Link to="/login">
+            Login
           </Link>
 
         </p>
@@ -64,4 +73,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;

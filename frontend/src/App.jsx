@@ -8,6 +8,9 @@ import Leaderboard from './pages/Leaderboard';
 import Support from './pages/Support';
 import Login from './pages/Login';
 
+// ADD THIS LINE
+import Register from './pages/Register';
+
 import './App.css';
 
 function App() {
@@ -41,6 +44,12 @@ function App() {
         <Route
           path="/login"
           element={<Login />}
+        />
+
+        {/* ADD THIS REGISTER ROUTE */}
+        <Route
+          path="/register"
+          element={<Register />}
         />
 
       </Routes>
