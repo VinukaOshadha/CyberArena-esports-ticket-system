@@ -1,3 +1,13 @@
+/* =========================================================
+   CYBERARENA - APP.CSS
+   Day 1 to Day 7
+   ========================================================= */
+
+
+/* =========================
+   GLOBAL STYLES
+   ========================= */
+
 * {
   box-sizing: border-box;
 }
@@ -14,10 +24,16 @@ body {
   padding: 30px 60px;
 }
 
+
+/* =========================
+   NAVBAR
+   ========================= */
+
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   border: 2px solid #39ff6f;
   padding: 18px 30px;
 }
@@ -25,8 +41,10 @@ body {
 .logo {
   color: #39ff6f;
   text-decoration: none;
+
   font-size: 30px;
   font-weight: bold;
+
   text-shadow: 0 0 10px #39ff6f;
 }
 
@@ -51,6 +69,11 @@ body {
   padding: 10px 18px;
 }
 
+
+/* =========================
+   GENERAL PAGE
+   ========================= */
+
 .page {
   padding-top: 80px;
 }
@@ -64,6 +87,11 @@ body {
   font-size: 18px;
   color: #b6ffc8;
 }
+
+
+/* =========================
+   HOME PAGE
+   ========================= */
 
 .home {
   padding-top: 70px;
@@ -94,7 +122,6 @@ body {
   color: #b6ffc8;
 
   font-size: 18px;
-
   line-height: 1.7;
 
   margin-bottom: 40px;
@@ -116,6 +143,8 @@ body {
   font-weight: bold;
 
   transition: 0.3s;
+
+  cursor: pointer;
 }
 
 .main-button:hover {
@@ -125,6 +154,11 @@ body {
 
   box-shadow: 0 0 20px #39ff6f;
 }
+
+
+/* =========================
+   HOME FEATURE CARDS
+   ========================= */
 
 .features {
   display: grid;
@@ -166,7 +200,318 @@ body {
   line-height: 1.6;
 }
 
-@media (max-width: 850px) {
+
+/* =========================
+   LOGIN + REGISTER
+   ========================= */
+
+.auth-page {
+  min-height: 75vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 450px;
+
+  border: 2px solid #39ff6f;
+
+  padding: 40px;
+
+  background:
+    rgba(57, 255, 111, 0.025);
+
+  box-shadow:
+    0 0 25px
+    rgba(57, 255, 111, 0.15);
+}
+
+.auth-card h1 {
+  font-size: 40px;
+
+  text-shadow:
+    0 0 10px #39ff6f;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-card label {
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+.auth-card input {
+  padding: 13px;
+
+  background: #020702;
+
+  border: 1px solid #39ff6f;
+
+  color: #39ff6f;
+
+  font-family: "Courier New", monospace;
+
+  outline: none;
+}
+
+.auth-card input:focus {
+  box-shadow:
+    0 0 10px
+    rgba(57, 255, 111, 0.5);
+}
+
+.auth-submit {
+  margin-top: 30px;
+
+  padding: 14px;
+
+  background: #39ff6f;
+
+  border: none;
+
+  color: #020702;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  font-family: "Courier New", monospace;
+}
+
+.auth-submit:hover {
+  box-shadow:
+    0 0 18px #39ff6f;
+}
+
+.auth-link {
+  text-align: center;
+
+  margin-top: 25px;
+
+  color: #b6ffc8;
+}
+
+.auth-link a {
+  color: #39ff6f;
+
+  font-weight: bold;
+}
+
+
+/* =========================
+   TOURNAMENTS PAGE
+   ========================= */
+
+.tournaments-page {
+  padding-top: 70px;
+}
+
+.tournaments-page h1 {
+  font-size: 48px;
+
+  text-shadow:
+    0 0 12px #39ff6f;
+}
+
+.page-description {
+  color: #b6ffc8;
+
+  margin-bottom: 40px;
+}
+
+.tournament-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 30px;
+}
+
+.tournament-card {
+  border: 1px solid #39ff6f;
+
+  padding: 30px;
+
+  background:
+    rgba(57, 255, 111, 0.03);
+
+  transition: 0.3s;
+}
+
+.tournament-card:hover {
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 0 20px
+    rgba(57, 255, 111, 0.3);
+}
+
+.tournament-card h2 {
+  margin-top: 10px;
+}
+
+.tournament-card p {
+  color: #b6ffc8;
+}
+
+.game-name {
+  color: #39ff6f;
+
+  letter-spacing: 3px;
+}
+
+.reserve-button {
+  margin-top: 15px;
+
+  padding: 12px 18px;
+
+  border: 1px solid #39ff6f;
+
+  background: transparent;
+
+  color: #39ff6f;
+
+  cursor: pointer;
+
+  font-family: "Courier New", monospace;
+
+  font-weight: bold;
+}
+
+.reserve-button:hover {
+  background: #39ff6f;
+
+  color: #020702;
+
+  box-shadow:
+    0 0 15px #39ff6f;
+}
+
+
+/* =========================
+   MY TICKETS PAGE
+   ========================= */
+
+.tickets-page {
+  padding-top: 70px;
+}
+
+.tickets-page h1 {
+  font-size: 48px;
+
+  text-shadow:
+    0 0 12px #39ff6f;
+}
+
+.tickets-list {
+  max-width: 700px;
+
+  margin-top: 40px;
+}
+
+.ticket-card {
+  border: 1px solid #39ff6f;
+
+  padding: 30px;
+
+  background:
+    rgba(57, 255, 111, 0.03);
+
+  transition: 0.3s;
+}
+
+.ticket-card:hover {
+  box-shadow:
+    0 0 20px
+    rgba(57, 255, 111, 0.25);
+}
+
+.ticket-card h2 {
+  margin-top: 0;
+}
+
+.ticket-card p {
+  color: #b6ffc8;
+}
+
+.ticket-status {
+  display: inline-block;
+
+  border: 1px solid #39ff6f;
+
+  padding: 8px 15px;
+
+  color: #39ff6f !important;
+
+  font-weight: bold;
+}
+
+
+/* =========================
+   LEADERBOARD PAGE
+   ========================= */
+
+.leaderboard-page {
+  padding-top: 70px;
+}
+
+.leaderboard-page h1 {
+  font-size: 48px;
+
+  text-shadow:
+    0 0 12px #39ff6f;
+}
+
+.leaderboard-table {
+  max-width: 850px;
+
+  margin-top: 40px;
+
+  border: 1px solid #39ff6f;
+}
+
+.leaderboard-row {
+  display: grid;
+
+  grid-template-columns:
+    1fr 2fr 1fr 1fr;
+
+  padding: 18px;
+
+  border-bottom:
+    1px solid
+    rgba(57, 255, 111, 0.3);
+}
+
+.leaderboard-row.header {
+  background:
+    rgba(57, 255, 111, 0.12);
+
+  font-weight: bold;
+}
+
+.leaderboard-row:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-row:hover {
+  background:
+    rgba(57, 255, 111, 0.05);
+}
+
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+
+@media (max-width: 900px) {
 
   .app {
     padding: 20px;
@@ -191,4 +536,63 @@ body {
   .features {
     grid-template-columns: 1fr;
   }
+
+  .tournament-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .leaderboard-row {
+    grid-template-columns:
+      1fr 2fr 1fr 1fr;
+
+    font-size: 14px;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .app {
+    padding: 15px;
+  }
+
+  .navbar {
+    padding: 15px;
+  }
+
+  .logo {
+    font-size: 25px;
+  }
+
+  .nav-links {
+    gap: 15px;
+  }
+
+  .hero {
+    margin-top: 40px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .auth-card {
+    padding: 25px;
+  }
+
+  .tournament-card {
+    padding: 20px;
+  }
+
+  .ticket-card {
+    padding: 20px;
+  }
+
+  .leaderboard-row {
+    padding: 12px 8px;
+
+    font-size: 12px;
+  }
+
 }

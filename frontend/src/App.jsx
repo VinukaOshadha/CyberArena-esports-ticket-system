@@ -4,11 +4,10 @@ import Navbar from './components/Navbar';
 
 import Home from './pages/Home';
 import Tournaments from './pages/Tournaments';
+import MyTickets from './pages/MyTickets';
 import Leaderboard from './pages/Leaderboard';
 import Support from './pages/Support';
 import Login from './pages/Login';
-
-// ADD THIS LINE
 import Register from './pages/Register';
 
 import './App.css';
@@ -32,6 +31,11 @@ function App() {
         />
 
         <Route
+          path="/my-tickets"
+          element={<MyTickets />}
+        />
+
+        <Route
           path="/leaderboard"
           element={<Leaderboard />}
         />
@@ -46,7 +50,6 @@ function App() {
           element={<Login />}
         />
 
-        {/* ADD THIS REGISTER ROUTE */}
         <Route
           path="/register"
           element={<Register />}
