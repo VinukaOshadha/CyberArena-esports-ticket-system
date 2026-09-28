@@ -1,6 +1,6 @@
 /* =========================================================
    CYBERARENA - APP.CSS
-   Day 1 to Day 7
+   Day 1 to Day 8
    ========================================================= */
 
 
@@ -508,6 +508,110 @@ body {
 
 
 /* =========================
+   SUPPORT PAGE
+   ========================= */
+
+.support-page {
+  padding-top: 70px;
+
+  display: flex;
+
+  justify-content: center;
+}
+
+.support-card {
+  width: 100%;
+
+  max-width: 650px;
+
+  border: 1px solid #39ff6f;
+
+  padding: 40px;
+
+  background:
+    rgba(57, 255, 111, 0.025);
+
+  box-shadow:
+    0 0 20px
+    rgba(57, 255, 111, 0.12);
+}
+
+.support-card h1 {
+  font-size: 42px;
+
+  text-shadow:
+    0 0 10px #39ff6f;
+}
+
+.support-card p {
+  color: #b6ffc8;
+
+  line-height: 1.6;
+}
+
+.support-card form {
+  display: flex;
+
+  flex-direction: column;
+}
+
+.support-card label {
+  margin-top: 20px;
+
+  margin-bottom: 8px;
+}
+
+.support-card input,
+.support-card textarea {
+  padding: 13px;
+
+  border: 1px solid #39ff6f;
+
+  background: #020702;
+
+  color: #39ff6f;
+
+  font-family: "Courier New", monospace;
+
+  outline: none;
+}
+
+.support-card input:focus,
+.support-card textarea:focus {
+  box-shadow:
+    0 0 10px
+    rgba(57, 255, 111, 0.5);
+}
+
+.support-card textarea {
+  resize: vertical;
+}
+
+.support-card button {
+  margin-top: 25px;
+
+  padding: 14px;
+
+  border: none;
+
+  background: #39ff6f;
+
+  color: #020702;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  font-family: "Courier New", monospace;
+}
+
+.support-card button:hover {
+  box-shadow:
+    0 0 18px #39ff6f;
+}
+
+
+/* =========================
    RESPONSIVE DESIGN
    ========================= */
 
@@ -593,6 +697,10 @@ body {
     padding: 12px 8px;
 
     font-size: 12px;
+  }
+
+  .support-card {
+    padding: 25px;
   }
 
 }
