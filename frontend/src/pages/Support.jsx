@@ -11,14 +11,59 @@ function Support() {
   const [message, setMessage] =
     useState('');
 
+  const [error, setError] =
+    useState('');
+
+  const [success, setSuccess] =
+    useState('');
+
 
   const handleSubmit = (event) => {
 
     event.preventDefault();
 
-    alert(
-      'Support backend will be connected later.'
+    setError('');
+    setSuccess('');
+
+
+    if (
+      !name ||
+      !email ||
+      !message
+    ) {
+
+      setError(
+        'Please complete all fields.'
+      );
+
+      return;
+    }
+
+
+    if (!email.includes('@')) {
+
+      setError(
+        'Please enter a valid email address.'
+      );
+
+      return;
+    }
+
+
+    if (message.length < 10) {
+
+      setError(
+        'Message must contain at least 10 characters.'
+      );
+
+      return;
+    }
+
+
+    setSuccess(
+      'Message validated successfully. Backend support service will be connected later.'
     );
+
 
     setName('');
     setEmail('');
@@ -46,6 +91,20 @@ function Support() {
         </p>
 
 
+        {error && (
+          <p className="error-message">
+            {error}
+          </p>
+        )}
+
+
+        {success && (
+          <p className="success-message">
+            {success}
+          </p>
+        )}
+
+
         <form onSubmit={handleSubmit}>
 
           <label>
@@ -59,7 +118,6 @@ function Support() {
               (event) =>
                 setName(event.target.value)
             }
-            required
           />
 
 
@@ -74,7 +132,6 @@ function Support() {
               (event) =>
                 setEmail(event.target.value)
             }
-            required
           />
 
 
@@ -89,7 +146,6 @@ function Support() {
               (event) =>
                 setMessage(event.target.value)
             }
-            required
           />
 
 

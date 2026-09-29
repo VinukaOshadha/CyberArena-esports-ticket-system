@@ -704,3 +704,38 @@ body {
   }
 
 }
+
+
+/* =========================
+   DAY 9 - FORM VALIDATION
+   ========================= */
+
+.error-message {
+  margin: 15px 0;
+
+  padding: 12px;
+
+  border: 1px solid #ff4040;
+
+  color: #ff6262;
+
+  background:
+    rgba(255, 64, 64, 0.08);
+
+  font-size: 14px;
+}
+
+.success-message {
+  margin: 15px 0;
+
+  padding: 12px;
+
+  border: 1px solid #39ff6f;
+
+  color: #39ff6f;
+
+  background:
+    rgba(57, 255, 111, 0.08);
+
+  font-size: 14px;
+}
