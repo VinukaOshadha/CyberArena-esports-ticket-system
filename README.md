@@ -111,6 +111,22 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 
 ---
 
+---
+
+## Day 10 Progress
+
+- Created the backend project folder
+- Initialized Node.js using npm
+- Installed Express.js
+- Installed CORS middleware
+- Installed dotenv for environment configuration
+- Installed nodemon for development
+- Created the main Express server
+- Configured backend server port using environment variables
+- Created a backend health-check API
+- Successfully tested the backend using Google Chrome
+
+
 ## Planned Technologies
 
 - React
