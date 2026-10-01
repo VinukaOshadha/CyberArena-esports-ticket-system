@@ -142,6 +142,23 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified the CyberArena backend health-check API
 
 
+---
+
+## Day 12 Progress
+
+- Installed bcryptjs for secure password handling
+- Created the MongoDB models folder
+- Created the User Mongoose model
+- Added player name field
+- Added unique user email field
+- Added password field with minimum length validation
+- Added unique Player ID field
+- Added automatic createdAt and updatedAt timestamps
+- Implemented automatic password hashing before saving users
+- Added password comparison method for future login authentication
+- Verified that the backend still runs successfully
+
+
 
 ## Planned Technologies
 
