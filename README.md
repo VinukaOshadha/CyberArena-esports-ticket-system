@@ -127,6 +127,22 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Successfully tested the backend using Google Chrome
 
 
+
+---
+
+## Day 11 Progress
+
+- Installed Mongoose for MongoDB integration
+- Created the MongoDB database configuration file
+- Added MongoDB connection URI using environment variables
+- Connected the Express backend to MongoDB
+- Added MongoDB connection error handling
+- Updated the backend server to initialize the database connection
+- Successfully tested the MongoDB connection
+- Verified the CyberArena backend health-check API
+
+
+
 ## Planned Technologies
 
 - React
