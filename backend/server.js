@@ -9,7 +9,7 @@ const connectDB = require('./config/db');
 dotenv.config();
 
 
-// Connect to MongoDB
+// Connect MongoDB
 connectDB();
 
 
@@ -23,7 +23,14 @@ app.use(cors());
 app.use(express.json());
 
 
-// Main API route
+// Authentication routes
+app.use(
+  '/api/auth',
+  require('./routes/authRoutes')
+);
+
+
+// Main route
 app.get('/', (req, res) => {
 
   res.send(
@@ -33,17 +40,19 @@ app.get('/', (req, res) => {
 });
 
 
-// Health check API
+// Health check
 app.get('/api/health', (req, res) => {
 
-  res.status(200).json({
+  res
+    .status(200)
+    .json({
 
-    success: true,
+      success: true,
 
-    message:
-      'CyberArena API and MongoDB backend are working'
+      message:
+        'CyberArena API and MongoDB backend are working'
 
-  });
+    });
 
 });
 

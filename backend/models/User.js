@@ -45,10 +45,10 @@ const userSchema = new mongoose.Schema(
 // Encrypt password before saving user
 userSchema.pre(
   'save',
-  async function (next) {
+  async function () {
 
     if (!this.isModified('password')) {
-      return next();
+      return;
     }
 
     const salt =
@@ -59,8 +59,6 @@ userSchema.pre(
         this.password,
         salt
       );
-
-    next();
   }
 );
 

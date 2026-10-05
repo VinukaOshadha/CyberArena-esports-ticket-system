@@ -160,6 +160,27 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 
 
 
+---
+
+## Day 13 Progress
+
+- Created the backend controllers folder
+- Created the authentication controller
+- Implemented the user registration API
+- Added registration input validation
+- Added password length validation
+- Added duplicate email checking
+- Added automatic unique Player ID generation
+- Created the authentication routes
+- Connected authentication routes to the Express server
+- Successfully registered users into MongoDB
+- Verified encrypted password storage using bcrypt
+- Tested duplicate user registration protection
+- Created a REST Client test request for the registration API
+
+
+
+
 ## Planned Technologies
 
 - React
