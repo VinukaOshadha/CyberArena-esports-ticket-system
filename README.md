@@ -181,6 +181,27 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 
 
 
+---
+
+## Day 14 Progress
+
+- Installed jsonwebtoken for JWT authentication
+- Added JWT secret configuration using environment variables
+- Implemented the user login API
+- Added email and password validation
+- Added registered-user lookup using MongoDB
+- Added secure password verification using bcrypt
+- Generated JWT tokens after successful login
+- Added the authentication login route
+- Tested successful user login using REST Client
+- Tested incorrect password handling
+- Tested unknown user login handling
+- Verified successful authentication response with user information and JWT token
+
+
+
+
+
 ## Planned Technologies
 
 - React
