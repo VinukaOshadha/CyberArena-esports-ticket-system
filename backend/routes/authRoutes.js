@@ -2,9 +2,16 @@ const express = require('express');
 
 const {
   registerUser,
-  loginUser
+  loginUser,
+  getMe
 } = require(
   '../controllers/authController'
+);
+
+const {
+  protect
+} = require(
+  '../middleware/authMiddleware'
 );
 
 
@@ -23,6 +30,14 @@ router.post(
 router.post(
   '/login',
   loginUser
+);
+
+
+// Current logged-in user
+router.get(
+  '/me',
+  protect,
+  getMe
 );
 
 

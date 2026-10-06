@@ -360,7 +360,62 @@ const loginUser =
 
   };
 
+// =====================================================
+// Get Current Logged-In User
+// =====================================================
 
+const getMe =
+  async (req, res) => {
+
+    try {
+
+      res
+        .status(200)
+        .json({
+
+          success: true,
+
+          user: {
+
+            id: req.user._id,
+
+            name: req.user.name,
+
+            email: req.user.email,
+
+            playerId:
+              req.user.playerId,
+
+            createdAt:
+              req.user.createdAt
+
+          }
+
+        });
+
+
+    } catch (error) {
+
+      console.error(
+        'Get user error:',
+        error.message
+      );
+
+
+      res
+        .status(500)
+        .json({
+
+          success: false,
+
+          message:
+            'Server error while retrieving user'
+
+        });
+
+    }
+
+  };
 // =====================================================
 // Exports
 // =====================================================
@@ -369,6 +424,8 @@ module.exports = {
 
   registerUser,
 
-  loginUser
+  loginUser,
 
-};
+  getMe
+
+};  

@@ -20,3 +20,9 @@ Content-Type: application/json
   "email": "vinuka9999@gmail.com",
   "password": "123456"
 }
+
+
+### Get Current User
+
+GET http://localhost:5000/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MTI1MTcwMiwiZXhwIjoxNzkzODQzNzAyfQ.8rONj-sVArhuDgnn5WVzs8G673eudE8dG9hVSwfdKD0

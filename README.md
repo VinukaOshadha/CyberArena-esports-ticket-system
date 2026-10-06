@@ -199,6 +199,22 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified successful authentication response with user information and JWT token
 
 
+---
+
+## Day 15 Progress
+
+- Created the backend authentication middleware
+- Added JWT token verification
+- Added Bearer token handling
+- Added protected route authentication
+- Retrieved logged-in users using JWT user IDs
+- Prevented passwords from being returned in protected responses
+- Created the current-user API endpoint
+- Added the protected `/api/auth/me` route
+- Tested authenticated user retrieval using REST Client
+- Tested requests without authentication tokens
+- Tested invalid JWT token handling
+- Verified protected backend route security
 
 
 
