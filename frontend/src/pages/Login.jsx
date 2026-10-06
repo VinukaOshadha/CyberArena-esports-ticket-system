@@ -1,57 +1,132 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import api from '../api/axios';
+
 
 function Login() {
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] =
+    useState('');
+
+  const [password, setPassword] =
+    useState('');
+
+  const [error, setError] =
+    useState('');
+
+  const [message, setMessage] =
+    useState('');
+
+  const [loading, setLoading] =
+    useState(false);
 
 
-  const handleSubmit = (event) => {
-
-    event.preventDefault();
-
-    setMessage('');
-    setError('');
+  const navigate =
+    useNavigate();
 
 
-    if (!email || !password) {
+  const handleSubmit =
+    async (event) => {
 
-      setError(
-        'Please enter both email and password.'
-      );
+      event.preventDefault();
 
-      return;
-    }
-
-
-    if (!email.includes('@')) {
-
-      setError(
-        'Please enter a valid email address.'
-      );
-
-      return;
-    }
+      setError('');
+      setMessage('');
 
 
-    if (password.length < 6) {
+      // Check empty fields
+      if (!email || !password) {
 
-      setError(
-        'Password must contain at least 6 characters.'
-      );
+        setError(
+          'Please enter email and password.'
+        );
 
-      return;
-    }
+        return;
+      }
 
 
-    setMessage(
-      'Frontend validation successful. Backend login will be connected later.'
-    );
+      // Check email
+      if (!email.includes('@')) {
 
-  };
+        setError(
+          'Please enter a valid email address.'
+        );
+
+        return;
+      }
+
+
+      // Check password length
+      if (password.length < 6) {
+
+        setError(
+          'Password must contain at least 6 characters.'
+        );
+
+        return;
+      }
+
+
+      try {
+
+        setLoading(true);
+
+
+        // Send login request to backend
+        const response =
+          await api.post(
+            '/auth/login',
+            {
+              email,
+              password
+            }
+          );
+
+
+        // Save user and token
+        localStorage.setItem(
+          'userInfo',
+          JSON.stringify({
+            user: response.data.user,
+            token: response.data.token
+          })
+        );
+
+
+        setMessage(
+          response.data.message ||
+          'Login successful.'
+        );
+
+
+        // Clear form
+        setEmail('');
+        setPassword('');
+
+
+        // Go to Home page
+        setTimeout(() => {
+
+          navigate('/');
+
+        }, 1200);
+
+
+      } catch (error) {
+
+        setError(
+          error.response?.data?.message ||
+          'Login failed. Please try again.'
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
 
 
   return (
@@ -63,20 +138,30 @@ function Login() {
           PLAYER ACCESS
         </p>
 
-        <h1>LOGIN</h1>
+        <h1>
+          LOGIN
+        </h1>
 
 
         {error && (
+
           <p className="error-message">
+
             {error}
+
           </p>
+
         )}
 
 
         {message && (
+
           <p className="success-message">
+
             {message}
+
           </p>
+
         )}
 
 
@@ -115,8 +200,15 @@ function Login() {
           <button
             type="submit"
             className="auth-submit"
+            disabled={loading}
           >
-            LOGIN
+
+            {
+              loading
+                ? 'LOGGING IN...'
+                : 'LOGIN'
+            }
+
           </button>
 
         </form>
@@ -138,4 +230,5 @@ function Login() {
   );
 }
 
-export default Login;
+
+export default Login; 

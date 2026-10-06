@@ -235,6 +235,28 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 
 
 
+---
+
+## Day 17 Progress
+
+- Connected the React Login page to the Express backend
+- Sent login credentials to the authentication API using Axios
+- Added frontend login validation
+- Added login loading state
+- Displayed backend login success messages
+- Displayed backend authentication error messages
+- Received JWT token after successful login
+- Stored logged-in user information in browser localStorage
+- Stored JWT authentication token in localStorage
+- Added automatic navigation to Home after successful login
+- Tested correct user login
+- Tested incorrect password handling
+- Tested unknown user login
+- Verified saved authentication information using browser developer tools
+
+
+
+
 
 ## Planned Technologies
 
