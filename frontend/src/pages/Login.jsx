@@ -1,7 +1,18 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import {
+  useContext,
+  useState
+} from 'react';
+
+import {
+  Link,
+  useNavigate
+} from 'react-router-dom';
 
 import api from '../api/axios';
+
+import {
+  AuthContext
+} from '../context/AuthContext';
 
 
 function Login() {
@@ -26,6 +37,13 @@ function Login() {
     useNavigate();
 
 
+  const {
+    login
+  } = useContext(
+    AuthContext
+  );
+
+
   const handleSubmit =
     async (event) => {
 
@@ -35,7 +53,6 @@ function Login() {
       setMessage('');
 
 
-      // Check empty fields
       if (!email || !password) {
 
         setError(
@@ -46,7 +63,6 @@ function Login() {
       }
 
 
-      // Check email
       if (!email.includes('@')) {
 
         setError(
@@ -57,7 +73,6 @@ function Login() {
       }
 
 
-      // Check password length
       if (password.length < 6) {
 
         setError(
@@ -73,7 +88,6 @@ function Login() {
         setLoading(true);
 
 
-        // Send login request to backend
         const response =
           await api.post(
             '/auth/login',
@@ -84,14 +98,18 @@ function Login() {
           );
 
 
-        // Save user and token
-        localStorage.setItem(
-          'userInfo',
-          JSON.stringify({
-            user: response.data.user,
-            token: response.data.token
-          })
-        );
+        const loginData = {
+
+          user:
+            response.data.user,
+
+          token:
+            response.data.token
+
+        };
+
+
+        login(loginData);
 
 
         setMessage(
@@ -100,17 +118,15 @@ function Login() {
         );
 
 
-        // Clear form
         setEmail('');
         setPassword('');
 
 
-        // Go to Home page
         setTimeout(() => {
 
           navigate('/');
 
-        }, 1200);
+        }, 1000);
 
 
       } catch (error) {
@@ -144,24 +160,16 @@ function Login() {
 
 
         {error && (
-
           <p className="error-message">
-
             {error}
-
           </p>
-
         )}
 
 
         {message && (
-
           <p className="success-message">
-
             {message}
-
           </p>
-
         )}
 
 
@@ -177,7 +185,9 @@ function Login() {
             value={email}
             onChange={
               (event) =>
-                setEmail(event.target.value)
+                setEmail(
+                  event.target.value
+                )
             }
           />
 
@@ -192,7 +202,9 @@ function Login() {
             value={password}
             onChange={
               (event) =>
-                setPassword(event.target.value)
+                setPassword(
+                  event.target.value
+                )
             }
           />
 
@@ -231,4 +243,4 @@ function Login() {
 }
 
 
-export default Login; 
+export default Login;

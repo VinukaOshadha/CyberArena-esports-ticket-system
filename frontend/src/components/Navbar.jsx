@@ -1,13 +1,53 @@
-import { NavLink } from 'react-router-dom';
+import {
+  useContext
+} from 'react';
+
+import {
+  NavLink,
+  useNavigate
+} from 'react-router-dom';
+
+import {
+  AuthContext
+} from '../context/AuthContext';
+
 import '../App.css';
 
+
 function Navbar() {
+
+  const {
+    userInfo,
+    logout
+  } = useContext(
+    AuthContext
+  );
+
+
+  const navigate =
+    useNavigate();
+
+
+  const handleLogout = () => {
+
+    logout();
+
+    navigate('/');
+
+  };
+
+
   return (
+
     <nav className="navbar">
 
-      <NavLink to="/" className="logo">
+      <NavLink
+        to="/"
+        className="logo"
+      >
         CyberArena
       </NavLink>
+
 
       <div className="nav-links">
 
@@ -19,6 +59,10 @@ function Navbar() {
           Tournaments
         </NavLink>
 
+        <NavLink to="/my-tickets">
+          My Tickets
+        </NavLink>
+
         <NavLink to="/leaderboard">
           Leaderboard
         </NavLink>
@@ -27,14 +71,50 @@ function Navbar() {
           Support
         </NavLink>
 
-        <NavLink to="/login" className="login-button">
-          Login
-        </NavLink>
+
+        {
+          userInfo ? (
+
+            <div className="user-area">
+
+              <span className="player-id">
+
+                {
+                  userInfo.user
+                    ?.playerId
+                }
+
+              </span>
+
+
+              <button
+                className="logout-button"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+
+            </div>
+
+          ) : (
+
+            <NavLink
+              to="/login"
+              className="login-button"
+            >
+              Login
+            </NavLink>
+
+          )
+        }
 
       </div>
 
     </nav>
+
   );
+
 }
+
 
 export default Navbar;

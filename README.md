@@ -255,6 +255,22 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified saved authentication information using browser developer tools
 
 
+---
+
+## Day 18 Progress
+
+- Created React AuthContext for global authentication state
+- Wrapped the application with AuthProvider
+- Connected frontend login to AuthContext
+- Restored logged-in user information from localStorage
+- Updated the Navbar based on authentication state
+- Displayed the logged-in player's Player ID
+- Added frontend Logout functionality
+- Removed authentication information from localStorage during logout
+- Added automatic navigation after logout
+- Verified that login state remains after browser refresh
+- Verified that logout state remains after browser refresh
+- Added cyber-themed Player ID and Logout button styling
 
 
 
