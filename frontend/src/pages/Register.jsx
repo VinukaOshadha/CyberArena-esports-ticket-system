@@ -1,86 +1,148 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import api from '../api/axios';
 
 function Register() {
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [name, setName] =
+    useState('');
+
+  const [email, setEmail] =
+    useState('');
+
+  const [password, setPassword] =
+    useState('');
+
   const [confirmPassword, setConfirmPassword] =
     useState('');
 
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
+  const [error, setError] =
+    useState('');
+
+  const [message, setMessage] =
+    useState('');
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const navigate =
+    useNavigate();
 
 
-  const handleSubmit = (event) => {
+  const handleSubmit =
+    async (event) => {
 
-    event.preventDefault();
+      event.preventDefault();
 
-    setError('');
-    setMessage('');
-
-
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !confirmPassword
-    ) {
-
-      setError(
-        'Please complete all fields.'
-      );
-
-      return;
-    }
+      setError('');
+      setMessage('');
 
 
-    if (name.length < 3) {
+      if (
+        !name ||
+        !email ||
+        !password ||
+        !confirmPassword
+      ) {
 
-      setError(
-        'Player name must contain at least 3 characters.'
-      );
+        setError(
+          'Please complete all fields.'
+        );
 
-      return;
-    }
-
-
-    if (!email.includes('@')) {
-
-      setError(
-        'Please enter a valid email address.'
-      );
-
-      return;
-    }
+        return;
+      }
 
 
-    if (password.length < 6) {
+      if (name.length < 3) {
 
-      setError(
-        'Password must contain at least 6 characters.'
-      );
+        setError(
+          'Player name must contain at least 3 characters.'
+        );
 
-      return;
-    }
-
-
-    if (password !== confirmPassword) {
-
-      setError(
-        'Passwords do not match.'
-      );
-
-      return;
-    }
+        return;
+      }
 
 
-    setMessage(
-      'Registration validation successful. Backend registration will be connected later.'
-    );
+      if (!email.includes('@')) {
 
-  };
+        setError(
+          'Please enter a valid email address.'
+        );
+
+        return;
+      }
+
+
+      if (password.length < 6) {
+
+        setError(
+          'Password must contain at least 6 characters.'
+        );
+
+        return;
+      }
+
+
+      if (password !== confirmPassword) {
+
+        setError(
+          'Passwords do not match.'
+        );
+
+        return;
+      }
+
+
+      try {
+
+        setLoading(true);
+
+
+        const response =
+          await api.post(
+            '/auth/register',
+            {
+              name,
+              email,
+              password
+            }
+          );
+
+
+        setMessage(
+          response.data.message ||
+          'Registration successful.'
+        );
+
+
+        setName('');
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+
+
+        setTimeout(() => {
+
+          navigate('/login');
+
+        }, 1500);
+
+
+      } catch (error) {
+
+        setError(
+          error.response?.data?.message ||
+          'Registration failed. Please try again.'
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
 
 
   return (
@@ -178,8 +240,15 @@ function Register() {
           <button
             type="submit"
             className="auth-submit"
+            disabled={loading}
           >
-            CREATE ACCOUNT
+
+            {
+              loading
+                ? 'CREATING ACCOUNT...'
+                : 'CREATE ACCOUNT'
+            }
+
           </button>
 
         </form>

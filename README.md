@@ -217,6 +217,24 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified protected backend route security
 
 
+---
+
+## Day 16 Progress
+
+- Installed Axios for frontend API communication
+- Created a reusable frontend Axios API configuration
+- Connected the React Registration page to the Express backend
+- Sent registration data from React to the backend API
+- Added frontend loading state during registration
+- Displayed backend registration success messages
+- Displayed backend registration error messages
+- Tested successful user registration from the frontend
+- Tested duplicate email registration from the frontend
+- Verified newly registered users in MongoDB
+- Added automatic navigation to Login after successful registration
+
+
+
 
 ## Planned Technologies
 
