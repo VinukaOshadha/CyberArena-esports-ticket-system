@@ -272,6 +272,21 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified that logout state remains after browser refresh
 - Added cyber-themed Player ID and Logout button styling
 
+---
+
+## Day 19 Progress
+
+- Updated Axios configuration for authenticated API requests
+- Added an Axios request interceptor
+- Automatically retrieved the JWT token from localStorage
+- Automatically added Bearer authentication tokens to API requests
+- Created a reusable ProtectedRoute React component
+- Protected the My Tickets frontend route
+- Redirected unauthenticated users to the Login page
+- Allowed authenticated users to access protected pages
+- Tested My Tickets access while logged out
+- Tested My Tickets access after successful login
+- Prepared frontend authentication for future protected backend APIs
 
 
 ## Planned Technologies
