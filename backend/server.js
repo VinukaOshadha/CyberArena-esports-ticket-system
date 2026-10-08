@@ -30,6 +30,12 @@ app.use(
 );
 
 
+app.use(
+  '/api/tournaments',
+  require('./routes/tournamentRoutes')
+);
+
+
 // Main route
 app.get('/', (req, res) => {
 

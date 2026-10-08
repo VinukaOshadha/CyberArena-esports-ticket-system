@@ -26,3 +26,25 @@ Content-Type: application/json
 
 GET http://localhost:5000/api/auth/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MTI1MTcwMiwiZXhwIjoxNzkzODQzNzAyfQ.8rONj-sVArhuDgnn5WVzs8G673eudE8dG9hVSwfdKD0
+
+
+
+### Create Tournament
+
+POST http://localhost:5000/api/tournaments
+Content-Type: application/json
+
+{
+  "title": "Legends Clash",
+  "game": "League of Legends",
+  "description": "Competitive League of Legends championship.",
+  "date": "2026-12-05",
+  "price": 1800,
+  "totalSeats": 200,
+  "image": ""
+}
+
+
+### Get All Tournaments
+
+GET http://localhost:5000/api/tournaments
