@@ -48,3 +48,16 @@ Content-Type: application/json
 ### Get All Tournaments
 
 GET http://localhost:5000/api/tournaments
+
+
+### Reserve Tournament Ticket
+
+POST http://localhost:5000/api/tickets/reserve/6ac71de4c9b9825aad7c2be9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MTUxNTg4MSwiZXhwIjoxNzk0MTA3ODgxfQ.2H9E1kEGQQTuwfHmnbn7sqqksdZGsjFmTgYBiruqgK4
+Content-Type: application/json
+
+
+### Get My Tickets
+
+GET http://localhost:5000/api/tickets/my
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MTUxNTg4MSwiZXhwIjoxNzk0MTA3ODgxfQ.2H9E1kEGQQTuwfHmnbn7sqqksdZGsjFmTgYBiruqgK4

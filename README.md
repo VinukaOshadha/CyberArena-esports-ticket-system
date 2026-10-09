@@ -334,6 +334,31 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified MongoDB → Express → React tournament data flow
 
 
+---
+
+## Day 22 Progress
+
+- Created the Ticket MongoDB model
+- Added references between tickets, users and tournaments
+- Added unique ticket code generation
+- Added ticket price and reservation status fields
+- Created the ticket backend controller
+- Implemented authenticated tournament ticket reservation
+- Added tournament availability checking
+- Added automatic available-seat reduction after reservation
+- Prevented duplicate tournament reservations by the same user
+- Created the authenticated My Tickets backend API
+- Added tournament data population to ticket responses
+- Created ticket backend routes
+- Connected ticket routes to the Express server
+- Protected ticket APIs using JWT authentication middleware
+- Tested successful ticket reservation using REST Client
+- Tested duplicate ticket reservation prevention
+- Tested available-seat reduction
+- Tested authenticated My Tickets retrieval
+- Verified ticket records using MongoDB Compass
+
+
 ## Planned Technologies
 
 - React
