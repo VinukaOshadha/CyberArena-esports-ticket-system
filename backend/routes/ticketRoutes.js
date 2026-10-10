@@ -4,7 +4,8 @@ const express =
 
 const {
   reserveTicket,
-  getMyTickets
+  getMyTickets,
+  cancelTicket
 } = require(
   '../controllers/ticketController'
 );
@@ -21,7 +22,7 @@ const router =
   express.Router();
 
 
-// Reserve tournament ticket
+// Reserve ticket
 router.post(
   '/reserve/:tournamentId',
   protect,
@@ -34,6 +35,14 @@ router.get(
   '/my',
   protect,
   getMyTickets
+);
+
+
+// Cancel ticket
+router.patch(
+  '/cancel/:ticketId',
+  protect,
+  cancelTicket
 );
 
 

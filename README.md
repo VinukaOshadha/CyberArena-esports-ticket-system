@@ -383,6 +383,32 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Tested authenticated My Tickets retrieval
 - Verified ticket records and seat changes in MongoDB
 
+
+
+---
+
+## Day 24 Progress
+
+- Implemented ticket cancellation in the backend
+- Added authenticated ticket cancellation API
+- Verified that users can only cancel their own tickets
+- Added ticket ID validation
+- Prevented duplicate ticket cancellation
+- Updated ticket status from RESERVED to CANCELLED
+- Automatically returned cancelled seats to tournament availability
+- Added ticket cancellation route
+- Connected the My Tickets page to the cancellation API
+- Added ticket cancellation confirmation
+- Added cancellation loading state
+- Added cancellation success and error messages
+- Added cancelled ticket styling
+- Removed the cancellation button from already cancelled tickets
+- Tested tournament seat restoration after cancellation
+- Verified cancelled ticket records using MongoDB Compass
+- Verified that cancelled tournament tickets can be reserved again
+
+
+
 ## Planned Technologies
 
 - React

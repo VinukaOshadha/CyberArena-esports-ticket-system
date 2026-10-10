@@ -27,54 +27,142 @@ function MyTickets() {
   ] = useState('');
 
 
+  const [
+    message,
+    setMessage
+  ] = useState('');
+
+
+  const [
+    cancellingId,
+    setCancellingId
+  ] = useState(null);
+
+
+  const fetchTickets =
+    async () => {
+
+      try {
+
+        setLoading(true);
+        setError('');
+
+
+        const response =
+          await api.get(
+            '/tickets/my'
+          );
+
+
+        setTickets(
+          response.data.tickets
+        );
+
+
+      } catch (error) {
+
+        setError(
+          error.response?.data?.message ||
+          'Unable to load your tickets.'
+        );
+
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+
   useEffect(() => {
-
-    const fetchTickets =
-      async () => {
-
-        try {
-
-          setLoading(true);
-          setError('');
-
-
-          const response =
-            await api.get(
-              '/tickets/my'
-            );
-
-
-          setTickets(
-            response.data.tickets
-          );
-
-
-        } catch (error) {
-
-          console.error(
-            'Ticket loading error:',
-            error
-          );
-
-
-          setError(
-            error.response?.data?.message ||
-            'Unable to load your tickets.'
-          );
-
-
-        } finally {
-
-          setLoading(false);
-
-        }
-
-      };
-
 
     fetchTickets();
 
   }, []);
+
+
+  const handleCancel =
+    async (ticketId) => {
+
+      const confirmCancel =
+        window.confirm(
+          'Are you sure you want to cancel this ticket?'
+        );
+
+
+      if (!confirmCancel) {
+
+        return;
+
+      }
+
+
+      try {
+
+        setCancellingId(
+          ticketId
+        );
+
+        setError('');
+        setMessage('');
+
+
+        const response =
+          await api.patch(
+            `/tickets/cancel/${ticketId}`
+          );
+
+
+        setMessage(
+          response.data.message
+        );
+
+
+        setTickets(
+          (currentTickets) =>
+            currentTickets.map(
+              (ticket) => {
+
+                if (
+                  ticket._id ===
+                  ticketId
+                ) {
+
+                  return {
+                    ...ticket,
+                    status:
+                      'CANCELLED'
+                  };
+
+                }
+
+
+                return ticket;
+
+              }
+            )
+        );
+
+
+      } catch (error) {
+
+        setError(
+          error.response?.data?.message ||
+          'Unable to cancel ticket.'
+        );
+
+
+      } finally {
+
+        setCancellingId(
+          null
+        );
+
+      }
+
+    };
 
 
   return (
@@ -92,10 +180,10 @@ function MyTickets() {
 
 
       {
-        loading && (
+        message && (
 
-          <p className="loading-message">
-            Loading your tickets...
+          <p className="success-message">
+            {message}
           </p>
 
         )
@@ -114,8 +202,18 @@ function MyTickets() {
 
 
       {
+        loading && (
+
+          <p className="loading-message">
+            Loading your tickets...
+          </p>
+
+        )
+      }
+
+
+      {
         !loading &&
-        !error &&
         tickets.length === 0 && (
 
           <p className="empty-message">
@@ -131,7 +229,6 @@ function MyTickets() {
 
       {
         !loading &&
-        !error &&
         tickets.length > 0 && (
 
           <div className="tickets-list">
@@ -172,18 +269,22 @@ function MyTickets() {
                     >
 
                       <p className="small-title">
+
                         {
                           tournament?.game ||
                           'TOURNAMENT'
                         }
+
                       </p>
 
 
                       <h2>
+
                         {
                           tournament?.title ||
                           'Tournament'
                         }
+
                       </h2>
 
 
@@ -228,12 +329,48 @@ function MyTickets() {
 
 
                       <span
-                        className="ticket-status"
+                        className={
+                          ticket.status ===
+                          'CANCELLED'
+                            ? 'ticket-status cancelled'
+                            : 'ticket-status'
+                        }
                       >
 
                         {ticket.status}
 
                       </span>
+
+
+                      {
+                        ticket.status ===
+                        'RESERVED' && (
+
+                          <button
+                            className="cancel-ticket-button"
+                            onClick={
+                              () =>
+                                handleCancel(
+                                  ticket._id
+                                )
+                            }
+                            disabled={
+                              cancellingId ===
+                              ticket._id
+                            }
+                          >
+
+                            {
+                              cancellingId ===
+                              ticket._id
+                                ? 'CANCELLING...'
+                                : 'CANCEL TICKET'
+                            }
+
+                          </button>
+
+                        )
+                      }
 
                     </div>
 

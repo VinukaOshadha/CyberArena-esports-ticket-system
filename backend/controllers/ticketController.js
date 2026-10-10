@@ -61,10 +61,10 @@ const reserveTicket =
       } = req.params;
 
 
-      // Validate MongoDB ID
       if (
-        !mongoose.Types.ObjectId
-          .isValid(tournamentId)
+        !mongoose.Types.ObjectId.isValid(
+          tournamentId
+        )
       ) {
 
         return res
@@ -81,7 +81,6 @@ const reserveTicket =
       }
 
 
-      // Find tournament
       const tournament =
         await Tournament.findById(
           tournamentId
@@ -104,7 +103,6 @@ const reserveTicket =
       }
 
 
-      // Check existing reservation
       const existingTicket =
         await Ticket.findOne({
 
@@ -136,7 +134,6 @@ const reserveTicket =
       }
 
 
-      // Check available seats
       if (
         tournament.availableSeats <= 0
       ) {
@@ -155,7 +152,6 @@ const reserveTicket =
       }
 
 
-      // Atomically reduce one seat
       const updatedTournament =
         await Tournament.findOneAndUpdate(
 
@@ -200,12 +196,10 @@ const reserveTicket =
       seatWasReduced = true;
 
 
-      // Generate ticket code
       const ticketCode =
         await generateTicketCode();
 
 
-      // Create ticket
       const ticket =
         await Ticket.create({
 
@@ -226,7 +220,6 @@ const reserveTicket =
         });
 
 
-      // Add tournament information
       await ticket.populate(
         'tournament',
         'title game date price totalSeats availableSeats'
@@ -249,7 +242,6 @@ const reserveTicket =
 
     } catch (error) {
 
-      // Restore seat if ticket creation failed
       if (
         seatWasReduced &&
         req.params.tournamentId
@@ -270,9 +262,7 @@ const reserveTicket =
 
             );
 
-        } catch (
-          rollbackError
-        ) {
+        } catch (rollbackError) {
 
           console.error(
             'Seat rollback error:',
@@ -371,10 +361,162 @@ const getMyTickets =
   };
 
 
+// =====================================================
+// Cancel Ticket
+// =====================================================
+
+const cancelTicket =
+  async (req, res) => {
+
+    try {
+
+      const {
+        ticketId
+      } = req.params;
+
+
+      // Validate ticket ID
+      if (
+        !mongoose.Types.ObjectId.isValid(
+          ticketId
+        )
+      ) {
+
+        return res
+          .status(400)
+          .json({
+
+            success: false,
+
+            message:
+              'Invalid ticket ID'
+
+          });
+
+      }
+
+
+      // Find ticket belonging to logged-in user
+      const ticket =
+        await Ticket.findOne({
+
+          _id:
+            ticketId,
+
+          user:
+            req.user._id
+
+        });
+
+
+      if (!ticket) {
+
+        return res
+          .status(404)
+          .json({
+
+            success: false,
+
+            message:
+              'Ticket not found'
+
+          });
+
+      }
+
+
+      // Prevent duplicate cancellation
+      if (
+        ticket.status ===
+        'CANCELLED'
+      ) {
+
+        return res
+          .status(400)
+          .json({
+
+            success: false,
+
+            message:
+              'Ticket is already cancelled'
+
+          });
+
+      }
+
+
+      // Change ticket status
+      ticket.status =
+        'CANCELLED';
+
+
+      await ticket.save();
+
+
+      // Return one seat to tournament
+      await Tournament.findByIdAndUpdate(
+
+        ticket.tournament,
+
+        {
+          $inc: {
+            availableSeats: 1
+          }
+        }
+
+      );
+
+
+      await ticket.populate(
+        'tournament',
+        'title game date price totalSeats availableSeats'
+      );
+
+
+      res
+        .status(200)
+        .json({
+
+          success: true,
+
+          message:
+            'Ticket cancelled successfully',
+
+          ticket
+
+        });
+
+
+    } catch (error) {
+
+      console.error(
+        'Ticket cancellation error:',
+        error.message
+      );
+
+
+      res
+        .status(500)
+        .json({
+
+          success: false,
+
+          message:
+            'Server error while cancelling ticket'
+
+        });
+
+    }
+
+  };
+
+
 module.exports = {
 
   reserveTicket,
 
-  getMyTickets
+  getMyTickets,
+
+  cancelTicket
 
 };

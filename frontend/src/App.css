@@ -1126,3 +1126,53 @@ button {
 .ticket-card strong {
   color: #39ff6f;
 }
+
+
+
+/* =========================================================
+   TICKET CANCELLATION
+   ========================================================= */
+
+.cancel-ticket-button {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 22px;
+
+  padding: 12px 18px;
+
+  border: 1px solid #ff5252;
+
+  background: transparent;
+
+  color: #ff6464;
+
+  font-weight: bold;
+
+  transition: 0.25s;
+}
+
+.cancel-ticket-button:hover {
+  background: #ff5252;
+
+  color: #020702;
+
+  box-shadow:
+    0 0 15px rgba(255, 82, 82, 0.65);
+}
+
+.cancel-ticket-button:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+.ticket-status.cancelled {
+  border-color: #ff5252;
+
+  color: #ff6464 !important;
+
+  background:
+    rgba(255, 82, 82, 0.08);
+}
