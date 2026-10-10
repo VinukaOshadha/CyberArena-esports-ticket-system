@@ -1,68 +1,258 @@
+import {
+  useEffect,
+  useState
+} from 'react';
+
+import api
+  from '../api/axios';
+
+
 function MyTickets() {
 
-  const tickets = [
+  const [
+    tickets,
+    setTickets
+  ] = useState([]);
 
-    {
-      id: 1,
-      tournament: 'Cyber Strike Championship',
-      game: 'Valorant',
-      date: 'October 15, 2026',
-      ticketCode: 'CA-VAL-001',
-      status: 'Confirmed'
-    }
 
-  ];
+  const [
+    loading,
+    setLoading
+  ] = useState(true);
+
+
+  const [
+    error,
+    setError
+  ] = useState('');
+
+
+  useEffect(() => {
+
+    const fetchTickets =
+      async () => {
+
+        try {
+
+          setLoading(true);
+          setError('');
+
+
+          const response =
+            await api.get(
+              '/tickets/my'
+            );
+
+
+          setTickets(
+            response.data.tickets
+          );
+
+
+        } catch (error) {
+
+          console.error(
+            'Ticket loading error:',
+            error
+          );
+
+
+          setError(
+            error.response?.data?.message ||
+            'Unable to load your tickets.'
+          );
+
+
+        } finally {
+
+          setLoading(false);
+
+        }
+
+      };
+
+
+    fetchTickets();
+
+  }, []);
+
 
   return (
+
     <div className="tickets-page">
 
       <p className="small-title">
-        PLAYER TICKETS
+        PLAYER RESERVATIONS
       </p>
+
 
       <h1>
         MY TICKETS
       </h1>
 
-      <div className="tickets-list">
 
-        {tickets.map(
-          (ticket) => (
+      {
+        loading && (
 
-            <div
-              className="ticket-card"
-              key={ticket.id}
-            >
+          <p className="loading-message">
+            Loading your tickets...
+          </p>
 
-              <h2>
-                {ticket.tournament}
-              </h2>
+        )
+      }
 
-              <p>
-                Game: {ticket.game}
-              </p>
 
-              <p>
-                Date: {ticket.date}
-              </p>
+      {
+        error && (
 
-              <p>
-                Ticket ID: {ticket.ticketCode}
-              </p>
+          <p className="error-message">
+            {error}
+          </p>
 
-              <p className="ticket-status">
-                {ticket.status}
-              </p>
+        )
+      }
 
-            </div>
 
-          )
-        )}
+      {
+        !loading &&
+        !error &&
+        tickets.length === 0 && (
 
-      </div>
+          <p className="empty-message">
+
+            You have not reserved any
+            tournament tickets yet.
+
+          </p>
+
+        )
+      }
+
+
+      {
+        !loading &&
+        !error &&
+        tickets.length > 0 && (
+
+          <div className="tickets-list">
+
+            {
+              tickets.map(
+                (ticket) => {
+
+                  const tournament =
+                    ticket.tournament;
+
+
+                  const formattedDate =
+                    tournament?.date
+                      ? new Date(
+                          tournament.date
+                        ).toLocaleDateString(
+                          'en-US',
+                          {
+                            year:
+                              'numeric',
+
+                            month:
+                              'short',
+
+                            day:
+                              'numeric'
+                          }
+                        )
+                      : 'N/A';
+
+
+                  return (
+
+                    <div
+                      className="ticket-card"
+                      key={ticket._id}
+                    >
+
+                      <p className="small-title">
+                        {
+                          tournament?.game ||
+                          'TOURNAMENT'
+                        }
+                      </p>
+
+
+                      <h2>
+                        {
+                          tournament?.title ||
+                          'Tournament'
+                        }
+                      </h2>
+
+
+                      <p>
+                        <strong>
+                          Ticket Code:
+                        </strong>{' '}
+
+                        {ticket.ticketCode}
+                      </p>
+
+
+                      <p>
+                        <strong>
+                          Date:
+                        </strong>{' '}
+
+                        {formattedDate}
+                      </p>
+
+
+                      <p>
+                        <strong>
+                          Price:
+                        </strong>{' '}
+
+                        LKR {ticket.price}
+                      </p>
+
+
+                      <p>
+                        <strong>
+                          Reserved:
+                        </strong>{' '}
+
+                        {
+                          new Date(
+                            ticket.reservedAt
+                          ).toLocaleString()
+                        }
+                      </p>
+
+
+                      <span
+                        className="ticket-status"
+                      >
+
+                        {ticket.status}
+
+                      </span>
+
+                    </div>
+
+                  );
+
+                }
+              )
+            }
+
+          </div>
+
+        )
+      }
 
     </div>
+
   );
+
 }
+
 
 export default MyTickets;

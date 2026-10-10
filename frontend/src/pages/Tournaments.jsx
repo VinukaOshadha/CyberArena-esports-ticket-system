@@ -1,42 +1,54 @@
-import { useEffect, useState } from 'react';
+import {
+  useEffect,
+  useState
+} from 'react';
 
-import api from '../api/axios';
+import api
+  from '../api/axios';
 
-import TournamentCard from '../components/TournamentCard';
+import TournamentCard
+  from '../components/TournamentCard';
 
 
 function Tournaments() {
 
-  const [tournaments, setTournaments] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [error, setError] =
-    useState('');
+  const [
+    tournaments,
+    setTournaments
+  ] = useState([]);
 
 
-  useEffect(() => {
+  const [
+    loading,
+    setLoading
+  ] = useState(true);
 
-    const fetchTournaments = async () => {
+
+  const [
+    error,
+    setError
+  ] = useState('');
+
+
+  const fetchTournaments =
+    async () => {
 
       try {
 
         setLoading(true);
         setError('');
 
-        const response =
-          await api.get('/tournaments');
 
-        console.log(
-          'Tournament API response:',
-          response.data
-        );
+        const response =
+          await api.get(
+            '/tournaments'
+          );
+
 
         setTournaments(
           response.data.tournaments
         );
+
 
       } catch (error) {
 
@@ -45,9 +57,11 @@ function Tournaments() {
           error
         );
 
+
         setError(
           'Unable to load tournaments. Please try again.'
         );
+
 
       } finally {
 
@@ -58,9 +72,46 @@ function Tournaments() {
     };
 
 
+  useEffect(() => {
+
     fetchTournaments();
 
   }, []);
+
+
+  const handleReserved =
+    (tournamentId) => {
+
+      setTournaments(
+        (currentTournaments) =>
+          currentTournaments.map(
+            (tournament) => {
+
+              if (
+                tournament._id ===
+                tournamentId
+              ) {
+
+                return {
+                  ...tournament,
+
+                  availableSeats:
+                    Math.max(
+                      0,
+                      tournament.availableSeats - 1
+                    )
+                };
+
+              }
+
+
+              return tournament;
+
+            }
+          )
+      );
+
+    };
 
 
   return (
@@ -71,27 +122,41 @@ function Tournaments() {
         COMPETITIVE EVENTS
       </p>
 
+
       <h1>
         TOURNAMENTS
       </h1>
 
 
-      {loading && (
+      <p className="page-description">
 
-        <p className="loading-message">
-          Loading tournaments...
-        </p>
+        Explore upcoming CyberArena
+        gaming tournaments and reserve
+        your place in the competition.
 
-      )}
+      </p>
 
 
-      {error && (
+      {
+        loading && (
 
-        <p className="error-message">
-          {error}
-        </p>
+          <p className="loading-message">
+            Loading tournaments...
+          </p>
 
-      )}
+        )
+      }
+
+
+      {
+        error && (
+
+          <p className="error-message">
+            {error}
+          </p>
+
+        )
+      }
 
 
       {
@@ -114,16 +179,19 @@ function Tournaments() {
 
           <div className="tournament-grid">
 
-            {tournaments.map(
-              (tournament) => (
+            {
+              tournaments.map(
+                (tournament) => (
 
-                <TournamentCard
-                  key={tournament._id}
-                  tournament={tournament}
-                />
+                  <TournamentCard
+                    key={tournament._id}
+                    tournament={tournament}
+                    onReserved={handleReserved}
+                  />
 
+                )
               )
-            )}
+            }
 
           </div>
 

@@ -1,4 +1,25 @@
-function TournamentCard({ tournament }) {
+import { useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
+import api from '../api/axios';
+
+
+function TournamentCard({ tournament, onReserved }) {
+
+  const [message, setMessage] =
+    useState('');
+
+  const [error, setError] =
+    useState('');
+
+  const [loading, setLoading] =
+    useState(false);
+
+
+  const navigate =
+    useNavigate();
+
 
   const formattedDate =
     new Date(
@@ -13,13 +34,68 @@ function TournamentCard({ tournament }) {
     );
 
 
-  const handleReserve = () => {
+  const handleReserve =
+    async () => {
 
-    alert(
-      `Ticket reservation for ${tournament.title} will be connected soon.`
-    );
+      setMessage('');
+      setError('');
 
-  };
+
+      const storedUser =
+        localStorage.getItem(
+          'userInfo'
+        );
+
+
+      if (!storedUser) {
+
+        navigate('/login');
+
+        return;
+
+      }
+
+
+      try {
+
+        setLoading(true);
+
+
+        const response =
+          await api.post(
+            `/tickets/reserve/${tournament._id}`
+          );
+
+
+        setMessage(
+          response.data.message
+        );
+
+
+        if (onReserved) {
+
+          onReserved(
+            tournament._id
+          );
+
+        }
+
+
+      } catch (error) {
+
+        setError(
+          error.response?.data?.message ||
+          'Ticket reservation failed.'
+        );
+
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
 
 
   return (
@@ -30,9 +106,11 @@ function TournamentCard({ tournament }) {
         {tournament.game}
       </p>
 
+
       <h2>
         {tournament.title}
       </h2>
+
 
       <p className="tournament-description">
         {tournament.description}
@@ -46,10 +124,12 @@ function TournamentCard({ tournament }) {
           {formattedDate}
         </p>
 
+
         <p>
           <strong>Price:</strong>{' '}
           LKR {tournament.price}
         </p>
+
 
         <p>
           <strong>
@@ -63,8 +143,44 @@ function TournamentCard({ tournament }) {
       </div>
 
 
-      <button onClick={handleReserve}>
-        RESERVE TICKET
+      {
+        error && (
+
+          <p className="error-message">
+            {error}
+          </p>
+
+        )
+      }
+
+
+      {
+        message && (
+
+          <p className="success-message">
+            {message}
+          </p>
+
+        )
+      }
+
+
+      <button
+        onClick={handleReserve}
+        disabled={
+          loading ||
+          tournament.availableSeats <= 0
+        }
+      >
+
+        {
+          loading
+            ? 'RESERVING...'
+            : tournament.availableSeats <= 0
+              ? 'SOLD OUT'
+              : 'RESERVE TICKET'
+        }
+
       </button>
 
     </div>

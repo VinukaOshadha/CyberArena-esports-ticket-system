@@ -1090,3 +1090,39 @@ button {
     flex-wrap: wrap;
   }
 }
+
+
+/* =========================================================
+   TICKET FRONTEND
+   ========================================================= */
+
+.tournament-card button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.tickets-list {
+  display: grid;
+  gap: 25px;
+}
+
+.ticket-card {
+  width: 100%;
+}
+
+.ticket-card .small-title {
+  margin-bottom: 10px;
+}
+
+.ticket-card h2 {
+  margin-bottom: 25px;
+}
+
+.ticket-status {
+  margin-top: 12px;
+}
+
+.ticket-card strong {
+  color: #39ff6f;
+}
