@@ -41,6 +41,12 @@ app.use(
 );
 
 
+app.use(
+  '/api/leaderboard',
+  require('./routes/leaderboardRoutes')
+);
+
+
 // Main route
 app.get('/', (req, res) => {
 

@@ -2,71 +2,100 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 
-const userSchema = new mongoose.Schema(
-  {
+const userSchema =
+  new mongoose.Schema(
+    {
 
-    name: {
-      type: String,
-      required: true,
-      trim: true
+      name: {
+        type: String,
+        required: true,
+        trim: true
+      },
+
+
+      email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true
+      },
+
+
+      password: {
+        type: String,
+        required: true,
+        minlength: 6
+      },
+
+
+      playerId: {
+        type: String,
+        required: true,
+        unique: true
+      },
+
+
+      points: {
+        type: Number,
+        default: 0,
+        min: 0
+      },
+
+
+      wins: {
+        type: Number,
+        default: 0,
+        min: 0
+      }
+
     },
 
-
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true
-    },
-
-
-    password: {
-      type: String,
-      required: true,
-      minlength: 6
-    },
-
-
-    playerId: {
-      type: String,
-      required: true,
-      unique: true
+    {
+      timestamps: true
     }
-
-  },
-
-  {
-    timestamps: true
-  }
-);
+  );
 
 
-// Encrypt password before saving user
+// =====================================================
+// Hash Password Before Saving
+// =====================================================
+
 userSchema.pre(
   'save',
   async function () {
 
-    if (!this.isModified('password')) {
+    if (
+      !this.isModified('password')
+    ) {
+
       return;
+
     }
+
 
     const salt =
       await bcrypt.genSalt(10);
+
 
     this.password =
       await bcrypt.hash(
         this.password,
         salt
       );
+
   }
 );
 
 
-// Compare entered password
-// with encrypted database password
+// =====================================================
+// Compare Login Password
+// =====================================================
+
 userSchema.methods.matchPassword =
-  async function (enteredPassword) {
+  async function (
+    enteredPassword
+  ) {
 
     return await bcrypt.compare(
       enteredPassword,

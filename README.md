@@ -409,6 +409,28 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 
 
 
+---
+
+## Day 25 Progress
+
+- Added player points to the User MongoDB model
+- Added player wins to the User MongoDB model
+- Added default leaderboard statistics for new users
+- Created the leaderboard backend controller
+- Implemented the Get Leaderboard API
+- Sorted leaderboard players by points and wins
+- Added automatic player ranking numbers
+- Limited leaderboard results to the top 20 players
+- Prevented passwords and emails from being exposed in leaderboard responses
+- Created leaderboard backend routes
+- Connected leaderboard routes to the Express server
+- Tested leaderboard retrieval using REST Client
+- Added test player statistics using MongoDB Compass
+- Verified automatic leaderboard sorting
+- Verified new users receive default points and wins
+
+
+
 ## Planned Technologies
 
 - React

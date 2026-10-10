@@ -68,3 +68,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkO
 PATCH http://localhost:5000/api/tickets/cancel/6ac85d46a752ea7a732a73ee
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MTYzMzc1NSwiZXhwIjoxNzk0MjI1NzU1fQ.A1qFQukBx6Sp6WhTpbFp9Aw3oCfLSjVwJs_1LPzSOSk
 Content-Type: application/json
+
+
+
+### Get Leaderboard
+
+GET http://localhost:5000/api/leaderboard
