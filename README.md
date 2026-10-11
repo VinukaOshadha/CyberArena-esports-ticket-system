@@ -430,6 +430,26 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified new users receive default points and wins
 
 
+---
+
+## Day 26 Progress
+
+- Connected the React Leaderboard page to the backend API
+- Removed hard-coded leaderboard player data
+- Retrieved real player rankings using Axios
+- Added React useEffect for automatic leaderboard loading
+- Added leaderboard loading state
+- Added leaderboard API error handling
+- Added empty leaderboard handling
+- Displayed player names from MongoDB
+- Displayed unique Player IDs
+- Displayed real player points and wins
+- Displayed automatic ranking numbers from the backend
+- Updated leaderboard table to support five columns
+- Added responsive leaderboard styling
+- Verified leaderboard changes when MongoDB player statistics were updated
+- Successfully completed MongoDB → Express → React leaderboard data flow
+
 
 ## Planned Technologies
 

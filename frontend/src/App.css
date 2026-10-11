@@ -803,7 +803,11 @@ button {
   display: grid;
 
   grid-template-columns:
-    1fr 2fr 1fr 1fr;
+    0.7fr 1.8fr 1.6fr 1fr 0.8fr;
+
+  align-items: center;
+
+  gap: 15px;
 
   padding: 18px;
 
@@ -1175,4 +1179,24 @@ button {
 
   background:
     rgba(255, 82, 82, 0.08);
+}
+
+
+
+/* =========================================================
+   REAL LEADERBOARD
+   ========================================================= */
+
+.rank-number {
+  font-weight: bold;
+  color: #39ff6f;
+}
+
+.leaderboard-player-id {
+  color: #b6ffc8;
+  font-size: 14px;
+}
+
+.leaderboard-row span {
+  overflow-wrap: anywhere;
 }
