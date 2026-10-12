@@ -46,6 +46,11 @@ app.use(
   require('./routes/leaderboardRoutes')
 );
 
+app.use(
+  '/api/support',
+  require('./routes/supportRoutes')
+);
+
 
 // Main route
 app.get('/', (req, res) => {

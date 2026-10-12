@@ -1200,3 +1200,14 @@ button {
 .leaderboard-row span {
   overflow-wrap: anywhere;
 }
+
+
+/* =========================================================
+   SUPPORT API
+   ========================================================= */
+
+.support-card button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}

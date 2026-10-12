@@ -451,6 +451,28 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Successfully completed MongoDB → Express → React leaderboard data flow
 
 
+---
+
+## Day 27 Progress
+
+- Created the SupportMessage MongoDB model
+- Added support name, email and message fields
+- Added OPEN and RESOLVED support status values
+- Created the support backend controller
+- Implemented the support message submission API
+- Added backend support form validation
+- Created support backend routes
+- Connected support routes to the Express server
+- Tested support submission using REST Client
+- Verified support records using MongoDB Compass
+- Connected the React Support page to the backend API
+- Sent support messages using Axios
+- Added frontend support loading state
+- Added frontend success and error messages
+- Cleared the Support form after successful submission
+- Tested frontend and backend validation
+- Successfully completed React → Express → MongoDB support message flow
+
 ## Planned Technologies
 
 - React
