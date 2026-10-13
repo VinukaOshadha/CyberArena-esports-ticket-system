@@ -473,6 +473,30 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Tested frontend and backend validation
 - Successfully completed React → Express → MongoDB support message flow
 
+
+
+---
+
+## Day 28 Progress
+
+- Created the React Player Profile page
+- Connected the Profile page to the protected current-user API
+- Retrieved logged-in user information using Axios
+- Automatically sent the JWT token using the Axios interceptor
+- Displayed the player's name
+- Displayed the player's email
+- Displayed the unique Player ID
+- Displayed the player's account creation date
+- Added profile loading state
+- Added profile API error handling
+- Protected the Profile route using ProtectedRoute
+- Added Profile navigation for authenticated users
+- Added cyber-themed Player Profile styling
+- Verified that Profile remains accessible after browser refresh
+- Verified that logged-out users are redirected to Login
+- Verified that passwords are not exposed in Profile responses
+
+
 ## Planned Technologies
 
 - React

@@ -77,6 +77,14 @@ function Navbar() {
 
             <div className="user-area">
 
+              <NavLink
+                to="/profile"
+                className="profile-link"
+              >
+                Profile
+              </NavLink>
+
+
               <span className="player-id">
 
                 {

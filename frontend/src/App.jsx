@@ -1,64 +1,134 @@
-import { Routes, Route } from 'react-router-dom';
+import {
+  Routes,
+  Route
+} from 'react-router-dom';
 
-import Navbar from './components/Navbar';
+import Navbar
+  from './components/Navbar';
 
-import Home from './pages/Home';
-import Tournaments from './pages/Tournaments';
-import MyTickets from './pages/MyTickets';
-import Leaderboard from './pages/Leaderboard';
-import Support from './pages/Support';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import ProtectedRoute
+  from './components/ProtectedRoute';
+
+import Home
+  from './pages/Home';
+
+import Tournaments
+  from './pages/Tournaments';
+
+import MyTickets
+  from './pages/MyTickets';
+
+import Leaderboard
+  from './pages/Leaderboard';
+
+import Support
+  from './pages/Support';
+
+import Login
+  from './pages/Login';
+
+import Register
+  from './pages/Register';
+
+import Profile
+  from './pages/Profile';
 
 import './App.css';
 
+
 function App() {
+
   return (
+
     <div className="app">
 
       <Navbar />
+
 
       <Routes>
 
         <Route
           path="/"
-          element={<Home />}
+          element={
+            <Home />
+          }
         />
+
 
         <Route
           path="/tournaments"
-          element={<Tournaments />}
+          element={
+            <Tournaments />
+          }
         />
+
 
         <Route
           path="/my-tickets"
-          element={<MyTickets />}
+          element={
+
+            <ProtectedRoute>
+
+              <MyTickets />
+
+            </ProtectedRoute>
+
+          }
         />
+
 
         <Route
           path="/leaderboard"
-          element={<Leaderboard />}
+          element={
+            <Leaderboard />
+          }
         />
+
 
         <Route
           path="/support"
-          element={<Support />}
+          element={
+            <Support />
+          }
         />
+
+
+        <Route
+          path="/profile"
+          element={
+
+            <ProtectedRoute>
+
+              <Profile />
+
+            </ProtectedRoute>
+
+          }
+        />
+
 
         <Route
           path="/login"
-          element={<Login />}
+          element={
+            <Login />
+          }
         />
+
 
         <Route
           path="/register"
-          element={<Register />}
+          element={
+            <Register />
+          }
         />
 
       </Routes>
 
     </div>
+
   );
+
 }
+
 
 export default App;
