@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-
+const Ticket = require('../models/Ticket');
 
 // =====================================================
 // Generate JWT Token
@@ -369,6 +369,29 @@ const getMe =
 
     try {
 
+      const [
+        totalTickets,
+        activeTickets,
+        cancelledTickets
+      ] = await Promise.all([
+
+        Ticket.countDocuments({
+          user: req.user._id
+        }),
+
+        Ticket.countDocuments({
+          user: req.user._id,
+          status: 'RESERVED'
+        }),
+
+        Ticket.countDocuments({
+          user: req.user._id,
+          status: 'CANCELLED'
+        })
+
+      ]);
+
+
       res
         .status(200)
         .json({
@@ -377,17 +400,37 @@ const getMe =
 
           user: {
 
-            id: req.user._id,
+            id:
+              req.user._id,
 
-            name: req.user.name,
+            name:
+              req.user.name,
 
-            email: req.user.email,
+            email:
+              req.user.email,
 
             playerId:
               req.user.playerId,
 
+            points:
+              req.user.points || 0,
+
+            wins:
+              req.user.wins || 0,
+
             createdAt:
               req.user.createdAt
+
+          },
+
+
+          stats: {
+
+            totalTickets,
+
+            activeTickets,
+
+            cancelledTickets
 
           }
 
@@ -409,7 +452,7 @@ const getMe =
           success: false,
 
           message:
-            'Server error while retrieving user'
+            'Server error while retrieving user profile'
 
         });
 

@@ -16,6 +16,16 @@ function Profile() {
 
 
   const [
+    stats,
+    setStats
+  ] = useState({
+    totalTickets: 0,
+    activeTickets: 0,
+    cancelledTickets: 0
+  });
+
+
+  const [
     loading,
     setLoading
   ] = useState(true);
@@ -46,6 +56,15 @@ function Profile() {
 
           setUser(
             response.data.user
+          );
+
+
+          setStats(
+            response.data.stats || {
+              totalTickets: 0,
+              activeTickets: 0,
+              cancelledTickets: 0
+            }
           );
 
 
@@ -148,6 +167,79 @@ function Profile() {
         </p>
 
 
+        {/* PLAYER STATISTICS */}
+
+        <div className="profile-stats">
+
+          <div className="profile-stat-card">
+
+            <span>
+              POINTS
+            </span>
+
+            <strong>
+              {user?.points || 0}
+            </strong>
+
+          </div>
+
+
+          <div className="profile-stat-card">
+
+            <span>
+              WINS
+            </span>
+
+            <strong>
+              {user?.wins || 0}
+            </strong>
+
+          </div>
+
+
+          <div className="profile-stat-card">
+
+            <span>
+              TOTAL TICKETS
+            </span>
+
+            <strong>
+              {stats.totalTickets}
+            </strong>
+
+          </div>
+
+
+          <div className="profile-stat-card">
+
+            <span>
+              ACTIVE
+            </span>
+
+            <strong>
+              {stats.activeTickets}
+            </strong>
+
+          </div>
+
+
+          <div className="profile-stat-card">
+
+            <span>
+              CANCELLED
+            </span>
+
+            <strong>
+              {stats.cancelledTickets}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        {/* PLAYER DETAILS */}
+
         <div className="profile-details">
 
           <div className="profile-row">
@@ -192,6 +284,32 @@ function Profile() {
           <div className="profile-row">
 
             <span>
+              POINTS
+            </span>
+
+            <strong>
+              {user?.points || 0}
+            </strong>
+
+          </div>
+
+
+          <div className="profile-row">
+
+            <span>
+              WINS
+            </span>
+
+            <strong>
+              {user?.wins || 0}
+            </strong>
+
+          </div>
+
+
+          <div className="profile-row">
+
+            <span>
               MEMBER SINCE
             </span>
 
@@ -209,6 +327,7 @@ function Profile() {
                         day: 'numeric'
                       }
                     )
+
                   : 'N/A'
               }
 

@@ -496,6 +496,26 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified that logged-out users are redirected to Login
 - Verified that passwords are not exposed in Profile responses
 
+---
+
+## Day 29 Progress
+
+- Extended the current-user API with real player statistics
+- Added player points to the authenticated profile response
+- Added player wins to the authenticated profile response
+- Added total ticket counting for the logged-in user
+- Added active reserved ticket counting
+- Added cancelled ticket counting
+- Used MongoDB ticket data to generate real profile statistics
+- Updated the React Player Profile page
+- Added player points and wins to the Profile interface
+- Added total ticket statistics
+- Added active reservation statistics
+- Added cancelled ticket statistics
+- Created responsive Profile statistics cards
+- Verified Profile statistics using MongoDB data
+- Verified statistics update after ticket cancellation
+- Maintained JWT protection for the Player Profile
 
 ## Planned Technologies
 
