@@ -1,3 +1,6 @@
+import NotFound
+  from './pages/NotFound';
+
 import {
   Routes,
   Route
@@ -119,6 +122,13 @@ function App() {
           path="/register"
           element={
             <Register />
+          }
+        />
+
+        <Route
+          path="*"
+          element={
+            <NotFound />
           }
         />
 

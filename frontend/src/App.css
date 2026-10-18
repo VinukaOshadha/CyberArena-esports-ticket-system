@@ -1609,3 +1609,822 @@ button {
     font-size: 12px;
   }
 }
+
+
+/* =========================================================
+   PROFILE STATISTICS
+   ========================================================= */
+
+.profile-card {
+  max-width: 820px;
+}
+
+
+/* STATISTICS GRID */
+
+.profile-stats {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  gap: 12px;
+
+  margin: 0 0 35px;
+}
+
+
+.profile-stat-card {
+  min-height: 105px;
+
+  padding: 16px 10px;
+
+  border:
+    1px solid rgba(57, 255, 111, 0.5);
+
+  background:
+    rgba(57, 255, 111, 0.035);
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  text-align: center;
+
+  transition: 0.25s;
+}
+
+
+.profile-stat-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #39ff6f;
+
+  box-shadow:
+    0 0 14px
+    rgba(57, 255, 111, 0.2);
+}
+
+
+.profile-stat-card span {
+  color: #b6ffc8;
+
+  font-size: 11px;
+
+  font-weight: bold;
+
+  letter-spacing: 1px;
+}
+
+
+.profile-stat-card strong {
+  color: #39ff6f;
+
+  font-size: 25px;
+
+  text-shadow:
+    0 0 8px
+    rgba(57, 255, 111, 0.5);
+}
+
+
+/* TABLET */
+
+@media (max-width: 800px) {
+
+  .profile-stats {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 500px) {
+
+  .profile-stats {
+    grid-template-columns: 1fr;
+  }
+
+
+  .profile-stat-card {
+    min-height: 90px;
+  }
+
+}
+
+
+
+/* =========================================================
+   404 PAGE
+   ========================================================= */
+
+.not-found-page {
+  width: 100%;
+
+  min-height: calc(100vh - 150px);
+
+  padding: 80px 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+
+.not-found-card {
+  width: 100%;
+
+  max-width: 650px;
+
+  padding: 55px 35px;
+
+  border: 1px solid #39ff6f;
+
+  background:
+    rgba(57, 255, 111, 0.025);
+
+  text-align: center;
+
+  box-shadow:
+    0 0 25px
+    rgba(57, 255, 111, 0.15);
+}
+
+
+.not-found-card h1 {
+  margin: 15px 0 5px;
+
+  color: #39ff6f;
+
+  font-size: clamp(80px, 12vw, 130px);
+
+  line-height: 1;
+
+  text-shadow:
+    0 0 10px #39ff6f,
+    0 0 30px
+    rgba(57, 255, 111, 0.5);
+}
+
+
+.not-found-card h2 {
+  margin: 10px 0 20px;
+
+  color: #39ff6f;
+
+  font-size: clamp(24px, 4vw, 34px);
+}
+
+
+.not-found-description {
+  max-width: 520px;
+
+  margin: 0 auto 30px;
+
+  color: #b6ffc8;
+
+  line-height: 1.7;
+}
+
+
+@media (max-width: 650px) {
+
+  .not-found-page {
+    padding: 50px 10px;
+  }
+
+
+  .not-found-card {
+    padding: 40px 20px;
+  }
+
+}
+
+
+/* =========================================================
+   FINAL CYBERARENA ALIGNMENT FIX
+   ========================================================= */
+
+
+/* =========================================================
+   GENERAL PAGE ALIGNMENT
+   ========================================================= */
+
+.home,
+.tournaments-page,
+.tickets-page,
+.leaderboard-page,
+.support-page,
+.profile-page,
+.not-found-page {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* =========================================================
+   NAVBAR FINAL ALIGNMENT
+   ========================================================= */
+
+.navbar {
+  width: 100%;
+  max-width: 1450px;
+
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+}
+
+.logo {
+  flex-shrink: 0;
+}
+
+.nav-links {
+  flex: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 18px;
+
+  min-width: 0;
+}
+
+.nav-links > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 40px;
+
+  white-space: nowrap;
+}
+
+.user-area {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  flex-shrink: 0;
+}
+
+.profile-link,
+.player-id,
+.logout-button {
+  min-height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-link {
+  padding: 9px 12px !important;
+}
+
+.player-id {
+  padding: 9px 12px;
+}
+
+.logout-button {
+  padding: 9px 14px;
+}
+
+
+/* =========================================================
+   HOME ALIGNMENT
+   ========================================================= */
+
+.hero {
+  width: 100%;
+  max-width: 950px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+.hero h1,
+.hero-description {
+  width: 100%;
+  text-align: center;
+}
+
+.features {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  align-items: stretch;
+
+  gap: 28px;
+}
+
+.feature-card {
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* =========================================================
+   TOURNAMENT ALIGNMENT
+   ========================================================= */
+
+.tournament-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  align-items: stretch;
+
+  gap: 28px;
+}
+
+.tournament-card {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.tournament-card h2 {
+  min-height: 58px;
+}
+
+.tournament-description {
+  min-height: 78px;
+}
+
+.tournament-info {
+  margin-top: auto;
+}
+
+.tournament-card button {
+  margin-top: auto;
+}
+
+
+/* =========================================================
+   MY TICKETS ALIGNMENT
+   ========================================================= */
+
+.tickets-list {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  align-items: stretch;
+
+  gap: 25px;
+}
+
+.ticket-card {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket-card .cancel-ticket-button {
+  margin-top: auto;
+}
+
+
+/* =========================================================
+   LEADERBOARD ALIGNMENT
+   ========================================================= */
+
+.leaderboard-table {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.leaderboard-row {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    0.7fr
+    1.6fr
+    1.7fr
+    1fr
+    0.8fr;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+.leaderboard-row.header {
+  font-weight: bold;
+}
+
+.leaderboard-row span {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   SUPPORT ALIGNMENT
+   ========================================================= */
+
+.support-page {
+  display: flex;
+
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.support-card {
+  width: 100%;
+  max-width: 650px;
+
+  margin: 0 auto;
+}
+
+.support-card .small-title,
+.support-card h1 {
+  text-align: center;
+}
+
+.support-card form {
+  width: 100%;
+}
+
+.support-card input,
+.support-card textarea,
+.support-card button {
+  width: 100%;
+}
+
+
+/* =========================================================
+   PROFILE FINAL ALIGNMENT
+   ========================================================= */
+
+.profile-page {
+  width: 100%;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 820px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.profile-avatar {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.profile-stats {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+
+  align-items: stretch;
+
+  gap: 12px;
+}
+
+.profile-stat-card {
+  width: 100%;
+  height: 100%;
+  min-height: 110px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+}
+
+.profile-details {
+  width: 100%;
+}
+
+.profile-row {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(160px, 0.8fr)
+    minmax(0, 1.6fr);
+
+  align-items: center;
+
+  gap: 25px;
+}
+
+.profile-row span {
+  text-align: left;
+}
+
+.profile-row strong {
+  text-align: left;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   404 ALIGNMENT
+   ========================================================= */
+
+.not-found-page {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.not-found-card {
+  width: 100%;
+  max-width: 650px;
+
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.not-found-card .main-button {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* =========================================================
+   LAPTOP
+   ========================================================= */
+
+@media (max-width: 1180px) {
+
+  .navbar {
+    gap: 16px;
+  }
+
+  .nav-links {
+    gap: 11px;
+  }
+
+  .nav-links > a {
+    font-size: 13px;
+  }
+
+  .profile-link,
+  .player-id,
+  .logout-button {
+    font-size: 11px !important;
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1030px) {
+
+  .navbar {
+    flex-direction: column;
+
+    justify-content: center;
+
+    gap: 18px;
+  }
+
+  .nav-links {
+    width: 100%;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 12px 20px;
+  }
+
+  .user-area {
+    justify-content: center;
+
+    flex-wrap: wrap;
+  }
+
+  .tournament-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .tickets-list {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL TABLET
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  .features {
+    grid-template-columns: 1fr;
+
+    max-width: 650px;
+
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .profile-stats {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .leaderboard-row {
+    min-width: 700px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 650px) {
+
+  .navbar {
+    padding: 18px 12px;
+  }
+
+  .nav-links {
+    justify-content: center;
+
+    gap: 10px 14px;
+  }
+
+  .user-area {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+  .hero {
+    margin-top: 55px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .tournament-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tickets-list {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-card {
+    padding: 25px;
+  }
+
+  .profile-row {
+    grid-template-columns: 1fr;
+
+    gap: 7px;
+  }
+
+  .profile-row span,
+  .profile-row strong {
+    text-align: left;
+  }
+
+  .leaderboard-row {
+    min-width: 650px;
+
+    grid-template-columns:
+      0.65fr
+      1.5fr
+      1.7fr
+      0.9fr
+      0.7fr;
+
+    gap: 8px;
+  }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 500px) {
+
+  .profile-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-stat-card {
+    min-height: 90px;
+  }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .nav-links {
+    width: 100%;
+
+    flex-direction: column;
+  }
+
+  .nav-links > a {
+    width: 100%;
+
+    text-align: center;
+  }
+
+  .user-area {
+    width: 100%;
+
+    flex-direction: column;
+  }
+
+  .profile-link,
+  .player-id,
+  .logout-button {
+    width: 100%;
+
+    text-align: center;
+  }
+
+}
