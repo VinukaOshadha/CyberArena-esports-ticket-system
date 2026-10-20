@@ -17,8 +17,8 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "vinuka9999@gmail.com",
-  "password": "123456"
+  "email": "chabiya@gmail.com",
+  "password": "1234567"
 }
 
 
@@ -89,3 +89,38 @@ Content-Type: application/json
   "email": "vinuka@gmail.com",
   "message": "I need help with my tournament ticket."
 }
+
+
+
+### Admin Login
+
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "vinuka9999@gmail.com",
+  "password": "123456"
+}
+
+
+### Check Admin Access
+
+GET http://localhost:5000/api/admin/check
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjQzNjE3OCwiZXhwIjoxNzkzMDQwOTc4fQ.t-WqecQ1-E8qQ5k3r2YlhZ3l_bcpfe3zjlVWQwunjvw
+
+
+### Player Trying Admin Route
+
+GET http://localhost:5000/api/admin/check
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzUxNDhhMjI5ZjJhY2Q3ZGM2YmEzNSIsImlhdCI6MTc5MjQ2MDEyMiwiZXhwIjoxNzkzMDY0OTIyfQ.e4OOOHhqzur6Rrrq2MIXB_WcUe62IhGwDzmiHU--1QQ
+
+
+### Admin Route Without Token
+
+GET http://localhost:5000/api/admin/check
+
+
+### Current User
+
+GET http://localhost:5000/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjQ2MDMzMSwiZXhwIjoxNzkzMDY1MTMxfQ.zOKqZ3SPC0DCykoPon9pvnhat53mGF1jWvqwUSdgF2Q

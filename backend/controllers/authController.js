@@ -1,9 +1,11 @@
 const jwt = require('jsonwebtoken');
+
 const User = require('../models/User');
 const Ticket = require('../models/Ticket');
 
+
 // =====================================================
-// Generate JWT Token
+// GENERATE JWT
 // =====================================================
 
 const generateToken = (userId) => {
@@ -16,58 +18,57 @@ const generateToken = (userId) => {
     process.env.JWT_SECRET,
 
     {
-      expiresIn: '30d'
+      expiresIn: '7d'
     }
   );
-
 };
 
 
 // =====================================================
-// Generate Unique Player ID
+// GENERATE UNIQUE PLAYER ID
 // =====================================================
 
-const generatePlayerId = async (name) => {
+const generatePlayerId =
+  async (name) => {
 
-  const cleanName =
-    name
-      .trim()
-      .split(' ')[0]
-      .toUpperCase()
-      .replace(/[^A-Z]/g, '')
-      .slice(0, 8);
-
-  const prefix =
-    cleanName || 'PLAYER';
-
-  let playerId;
-  let alreadyExists = true;
+    const cleanName =
+      name
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, '')
+        .substring(0, 10) || 'PLAYER';
 
 
-  while (alreadyExists) {
-
-    const number =
-      Math.floor(
-        1000 + Math.random() * 9000
-      );
-
-    playerId =
-      `${prefix}-${number}`;
-
-    alreadyExists =
-      await User.exists({
-        playerId: playerId
-      });
-
-  }
+    let playerId;
+    let alreadyExists = true;
 
 
-  return playerId;
-};
+    while (alreadyExists) {
+
+      const randomNumber =
+        Math.floor(
+          1000 +
+          Math.random() * 9000
+        );
+
+
+      playerId =
+        `${cleanName}-${randomNumber}`;
+
+
+      alreadyExists =
+        await User.exists({
+          playerId
+        });
+    }
+
+
+    return playerId;
+  };
 
 
 // =====================================================
-// Register User
+// REGISTER USER
 // =====================================================
 
 const registerUser =
@@ -82,7 +83,6 @@ const registerUser =
       } = req.body;
 
 
-      // Check empty fields
       if (
         !name ||
         !email ||
@@ -92,74 +92,93 @@ const registerUser =
         return res
           .status(400)
           .json({
-
             success: false,
-
             message:
               'Please provide name, email and password'
-
           });
-
       }
 
 
-      // Password validation
-      if (password.length < 6) {
+      if (
+        name.trim().length < 3
+      ) {
 
         return res
           .status(400)
           .json({
-
             success: false,
-
             message:
-              'Password must contain at least 6 characters'
-
+              'Name must contain at least 3 characters'
           });
-
       }
 
 
-      // Check existing user
-      const userExists =
+      if (
+        !email.includes('@')
+      ) {
+
+        return res
+          .status(400)
+          .json({
+            success: false,
+            message:
+              'Please provide a valid email address'
+          });
+      }
+
+
+      if (
+        password.length < 6
+      ) {
+
+        return res
+          .status(400)
+          .json({
+            success: false,
+            message:
+              'Password must contain at least 6 characters'
+          });
+      }
+
+
+      const normalizedEmail =
+        email
+          .trim()
+          .toLowerCase();
+
+
+      const existingUser =
         await User.findOne({
-
-          email:
-            email
-              .toLowerCase()
-              .trim()
-
+          email: normalizedEmail
         });
 
 
-      if (userExists) {
+      if (existingUser) {
 
         return res
           .status(400)
           .json({
-
             success: false,
-
             message:
               'User already exists with this email'
-
           });
-
       }
 
 
-      // Generate Player ID
       const playerId =
-        await generatePlayerId(name);
+        await generatePlayerId(
+          name
+        );
 
 
-      // Create user
       const user =
         await User.create({
 
-          name,
+          name:
+            name.trim(),
 
-          email,
+          email:
+            normalizedEmail,
 
           password,
 
@@ -175,20 +194,37 @@ const registerUser =
           success: true,
 
           message:
-            'User registered successfully',
+            'Registration successful',
 
           user: {
 
-            id: user._id,
+            id:
+              user._id,
 
-            name: user.name,
+            name:
+              user.name,
 
-            email: user.email,
+            email:
+              user.email,
 
             playerId:
-              user.playerId
+              user.playerId,
 
-          }
+            role:
+              user.role,
+
+            points:
+              user.points,
+
+            wins:
+              user.wins
+
+          },
+
+          token:
+            generateToken(
+              user._id
+            )
 
         });
 
@@ -197,7 +233,7 @@ const registerUser =
 
       console.error(
         'Registration error:',
-        error
+        error.message
       );
 
 
@@ -208,17 +244,15 @@ const registerUser =
           success: false,
 
           message:
-            error.message
+            'Server error during registration'
 
         });
-
     }
-
   };
 
 
 // =====================================================
-// Login User
+// LOGIN USER
 // =====================================================
 
 const loginUser =
@@ -232,7 +266,6 @@ const loginUser =
       } = req.body;
 
 
-      // Check empty fields
       if (
         !email ||
         !password
@@ -248,24 +281,24 @@ const loginUser =
               'Please provide email and password'
 
           });
-
       }
 
 
-      // Find user
       const user =
         await User.findOne({
 
           email:
             email
-              .toLowerCase()
               .trim()
+              .toLowerCase()
 
         });
 
 
-      // User not found
-      if (!user) {
+      if (
+        !user ||
+        !(await user.matchPassword(password))
+      ) {
 
         return res
           .status(401)
@@ -277,39 +310,9 @@ const loginUser =
               'Invalid email or password'
 
           });
-
       }
 
 
-      // Check password
-      const passwordMatches =
-        await user.matchPassword(
-          password
-        );
-
-
-      if (!passwordMatches) {
-
-        return res
-          .status(401)
-          .json({
-
-            success: false,
-
-            message:
-              'Invalid email or password'
-
-          });
-
-      }
-
-
-      // Generate JWT
-      const token =
-        generateToken(user._id);
-
-
-      // Successful login
       res
         .status(200)
         .json({
@@ -321,18 +324,33 @@ const loginUser =
 
           user: {
 
-            id: user._id,
+            id:
+              user._id,
 
-            name: user.name,
+            name:
+              user.name,
 
-            email: user.email,
+            email:
+              user.email,
 
             playerId:
-              user.playerId
+              user.playerId,
+
+            role:
+              user.role || 'PLAYER',
+
+            points:
+              user.points || 0,
+
+            wins:
+              user.wins || 0
 
           },
 
-          token: token
+          token:
+            generateToken(
+              user._id
+            )
 
         });
 
@@ -341,7 +359,7 @@ const loginUser =
 
       console.error(
         'Login error:',
-        error
+        error.message
       );
 
 
@@ -355,13 +373,12 @@ const loginUser =
             'Server error during login'
 
         });
-
     }
-
   };
 
+
 // =====================================================
-// Get Current Logged-In User
+// GET CURRENT LOGGED-IN USER
 // =====================================================
 
 const getMe =
@@ -412,6 +429,9 @@ const getMe =
             playerId:
               req.user.playerId,
 
+            role:
+              req.user.role || 'PLAYER',
+
             points:
               req.user.points || 0,
 
@@ -455,13 +475,9 @@ const getMe =
             'Server error while retrieving user profile'
 
         });
-
     }
-
   };
-// =====================================================
-// Exports
-// =====================================================
+
 
 module.exports = {
 
@@ -471,4 +487,4 @@ module.exports = {
 
   getMe
 
-};  
+};

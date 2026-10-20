@@ -2,75 +2,78 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 
-const userSchema =
-  new mongoose.Schema(
-    {
-
-      name: {
-        type: String,
-        required: true,
-        trim: true
-      },
-
-
-      email: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true
-      },
-
-
-      password: {
-        type: String,
-        required: true,
-        minlength: 6
-      },
-
-
-      playerId: {
-        type: String,
-        required: true,
-        unique: true
-      },
-
-
-      points: {
-        type: Number,
-        default: 0,
-        min: 0
-      },
-
-
-      wins: {
-        type: Number,
-        default: 0,
-        min: 0
-      }
-
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true
     },
 
-    {
-      timestamps: true
+
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true
+    },
+
+
+    password: {
+      type: String,
+      required: true,
+      minlength: 6
+    },
+
+
+    playerId: {
+      type: String,
+      required: true,
+      unique: true
+    },
+
+
+    role: {
+      type: String,
+      enum: [
+        'PLAYER',
+        'ADMIN'
+      ],
+      default: 'PLAYER'
+    },
+
+
+    points: {
+      type: Number,
+      default: 0,
+      min: 0
+    },
+
+
+    wins: {
+      type: Number,
+      default: 0,
+      min: 0
     }
-  );
+  },
+
+  {
+    timestamps: true
+  }
+);
 
 
 // =====================================================
-// Hash Password Before Saving
+// HASH PASSWORD BEFORE SAVING
 // =====================================================
 
 userSchema.pre(
   'save',
   async function () {
 
-    if (
-      !this.isModified('password')
-    ) {
-
+    if (!this.isModified('password')) {
       return;
-
     }
 
 
@@ -83,25 +86,21 @@ userSchema.pre(
         this.password,
         salt
       );
-
   }
 );
 
 
 // =====================================================
-// Compare Login Password
+// COMPARE PASSWORD
 // =====================================================
 
 userSchema.methods.matchPassword =
-  async function (
-    enteredPassword
-  ) {
+  async function (enteredPassword) {
 
     return await bcrypt.compare(
       enteredPassword,
       this.password
     );
-
   };
 
 

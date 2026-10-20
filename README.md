@@ -536,7 +536,26 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Checked responsive layouts on desktop, tablet, and mobile views
 - Improved overall application navigation and error handling
 
+---
 
+## Day 31 Progress
+
+- Added PLAYER and ADMIN roles to the User MongoDB model
+- Added PLAYER as the default role for new accounts
+- Updated registration responses with user roles
+- Updated login responses with user roles
+- Added roles to the current authenticated user API
+- Updated JWT authentication middleware
+- Created ADMIN-only authorization middleware
+- Created an Admin backend controller
+- Created protected Admin API routes
+- Connected Admin routes to the Express server
+- Created an administrator account using MongoDB Compass
+- Tested Admin authentication using JWT
+- Verified ADMIN users can access protected Admin APIs
+- Verified PLAYER users receive 403 Forbidden
+- Verified unauthenticated users receive 401 Unauthorized
+- Established the backend security foundation for the CyberArena Admin system
 
 ## Planned Technologies
 

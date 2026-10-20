@@ -46,9 +46,16 @@ app.use(
   require('./routes/leaderboardRoutes')
 );
 
+
 app.use(
   '/api/support',
   require('./routes/supportRoutes')
+);
+
+
+app.use(
+  '/api/admin',
+  require('./routes/adminRoutes')
 );
 
 
