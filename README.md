@@ -557,6 +557,33 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified unauthenticated users receive 401 Unauthorized
 - Established the backend security foundation for the CyberArena Admin system
 
+
+
+---
+
+## Day 32 Progress
+
+- Created the CyberArena Admin Dashboard
+- Created a frontend AdminRoute component
+- Restricted the Admin Dashboard to ADMIN users
+- Added an Admin navigation link for administrators
+- Implemented Admin tournament creation
+- Implemented Admin tournament editing
+- Implemented Admin tournament deletion
+- Added backend ADMIN protection to tournament management routes
+- Removed public tournament creation access
+- Added tournament form validation
+- Preserved reserved seat counts when tournament capacity is updated
+- Prevented deletion of tournaments that contain ticket records
+- Connected Admin Dashboard forms to the Express backend using Axios
+- Added success and error handling for Admin actions
+- Added responsive Admin Dashboard styling
+- Verified PLAYER users cannot access Admin functionality
+- Verified created and updated tournaments appear on the public Tournaments page
+- Completed protected Admin tournament CRUD functionality
+
+
+
 ## Planned Technologies
 
 - React

@@ -1,6 +1,3 @@
-import NotFound
-  from './pages/NotFound';
-
 import {
   Routes,
   Route
@@ -11,6 +8,9 @@ import Navbar
 
 import ProtectedRoute
   from './components/ProtectedRoute';
+
+import AdminRoute
+  from './components/AdminRoute';
 
 import Home
   from './pages/Home';
@@ -35,6 +35,12 @@ import Register
 
 import Profile
   from './pages/Profile';
+
+import AdminDashboard
+  from './pages/AdminDashboard';
+
+import NotFound
+  from './pages/NotFound';
 
 import './App.css';
 
@@ -111,6 +117,20 @@ function App() {
 
 
         <Route
+          path="/admin"
+          element={
+
+            <AdminRoute>
+
+              <AdminDashboard />
+
+            </AdminRoute>
+
+          }
+        />
+
+
+        <Route
           path="/login"
           element={
             <Login />
@@ -124,6 +144,7 @@ function App() {
             <Register />
           }
         />
+
 
         <Route
           path="*"

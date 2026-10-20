@@ -2428,3 +2428,347 @@ button {
   }
 
 }
+
+/* =========================================================
+   ADMIN DASHBOARD
+   ========================================================= */
+
+.admin-page {
+  width: 100%;
+  max-width: 1250px;
+
+  margin: 0 auto;
+
+  padding: 70px 20px;
+}
+
+
+.admin-header {
+  margin-bottom: 40px;
+}
+
+
+.admin-header h1 {
+  margin: 10px 0 15px;
+
+  color: #39ff6f;
+
+  font-size:
+    clamp(38px, 4vw, 48px);
+
+  text-shadow:
+    0 0 12px #39ff6f;
+}
+
+
+/* ADMIN NAV */
+
+.admin-nav-link {
+  padding: 9px 12px !important;
+
+  border: 1px solid #39ff6f;
+
+  background:
+    rgba(57, 255, 111, 0.08);
+}
+
+
+/* FORM CARD */
+
+.admin-form-card {
+  width: 100%;
+
+  max-width: 850px;
+
+  margin: 0 auto 70px;
+
+  padding: 35px;
+
+  border: 1px solid #39ff6f;
+
+  background:
+    rgba(57, 255, 111, 0.025);
+}
+
+
+.admin-form-card h2 {
+  margin:
+    0 0 25px;
+
+  color: #39ff6f;
+}
+
+
+.admin-form-card form {
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+.admin-form-card label {
+  margin:
+    18px 0 8px;
+
+  color: #39ff6f;
+
+  font-weight: bold;
+}
+
+
+.admin-form-card input,
+.admin-form-card textarea {
+  width: 100%;
+
+  padding: 13px;
+
+  border:
+    1px solid #39ff6f;
+
+  background: #020702;
+
+  color: #39ff6f;
+
+  outline: none;
+}
+
+
+.admin-form-card input:focus,
+.admin-form-card textarea:focus {
+  box-shadow:
+    0 0 10px
+    rgba(57, 255, 111, 0.4);
+}
+
+
+.admin-form-card textarea {
+  resize: vertical;
+}
+
+
+.admin-form-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+
+.admin-form-grid > div {
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+.admin-form-actions {
+  display: flex;
+
+  gap: 15px;
+
+  margin-top: 28px;
+}
+
+
+.admin-save-button,
+.admin-cancel-button {
+  flex: 1;
+
+  padding: 14px;
+
+  font-weight: bold;
+}
+
+
+.admin-save-button {
+  border: 1px solid #39ff6f;
+
+  background: #39ff6f;
+
+  color: #020702;
+}
+
+
+.admin-cancel-button {
+  border: 1px solid #b6ffc8;
+
+  background: transparent;
+
+  color: #b6ffc8;
+}
+
+
+/* TOURNAMENT MANAGEMENT */
+
+.admin-tournament-section {
+  width: 100%;
+}
+
+
+.admin-tournament-section > h2 {
+  margin-bottom: 30px;
+
+  color: #39ff6f;
+}
+
+
+.admin-tournament-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  align-items: stretch;
+
+  gap: 25px;
+}
+
+
+.admin-tournament-card {
+  width: 100%;
+
+  padding: 25px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  border:
+    1px solid
+    rgba(57, 255, 111, 0.65);
+
+  background:
+    rgba(57, 255, 111, 0.025);
+}
+
+
+.admin-tournament-card h3 {
+  min-height: 50px;
+
+  margin:
+    12px 0 15px;
+
+  color: #39ff6f;
+
+  font-size: 21px;
+}
+
+
+.admin-tournament-card > p {
+  color: #b6ffc8;
+
+  line-height: 1.6;
+}
+
+
+.admin-tournament-info {
+  margin-top: auto;
+}
+
+
+.admin-tournament-info p {
+  color: #b6ffc8;
+}
+
+
+.admin-tournament-info strong {
+  color: #39ff6f;
+}
+
+
+.admin-card-actions {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 10px;
+
+  margin-top: 20px;
+}
+
+
+.admin-edit-button,
+.admin-delete-button {
+  padding: 11px;
+
+  background: transparent;
+
+  font-weight: bold;
+}
+
+
+.admin-edit-button {
+  border: 1px solid #39ff6f;
+
+  color: #39ff6f;
+}
+
+
+.admin-edit-button:hover {
+  background: #39ff6f;
+
+  color: #020702;
+}
+
+
+.admin-delete-button {
+  border: 1px solid #ff5252;
+
+  color: #ff6464;
+}
+
+
+.admin-delete-button:hover {
+  background: #ff5252;
+
+  color: #020702;
+}
+
+
+/* TABLET */
+
+@media (max-width: 950px) {
+
+  .admin-tournament-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+  .admin-page {
+    padding:
+      50px 10px;
+  }
+
+
+  .admin-form-card {
+    padding: 25px;
+  }
+
+
+  .admin-form-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .admin-form-actions {
+    flex-direction: column;
+  }
+
+
+  .admin-tournament-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+}

@@ -124,3 +124,19 @@ GET http://localhost:5000/api/admin/check
 
 GET http://localhost:5000/api/auth/me
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjQ2MDMzMSwiZXhwIjoxNzkzMDY1MTMxfQ.zOKqZ3SPC0DCykoPon9pvnhat53mGF1jWvqwUSdgF2Q
+
+
+### Admin Create Tournament
+
+POST http://localhost:5000/api/admin/tournaments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjUwMDE1NCwiZXhwIjoxNzkzMTA0OTU0fQ.LF-5rlKM34C2vJ9OneQOJy4gL9xGnDgklsh2q6AhGRA
+Content-Type: application/json
+
+{
+  "title": "CyberArena Masters",
+  "game": "Counter-Strike 2",
+  "description": "Competitive CyberArena CS2 championship.",
+  "date": "2026-12-15",
+  "price": 2000,
+  "totalSeats": 120
+}

@@ -11,8 +11,6 @@ import {
   AuthContext
 } from '../context/AuthContext';
 
-import '../App.css';
-
 
 function Navbar() {
 
@@ -28,13 +26,19 @@ function Navbar() {
     useNavigate();
 
 
-  const handleLogout = () => {
+  const handleLogout =
+    () => {
 
-    logout();
+      logout();
 
-    navigate('/');
+      navigate('/');
 
-  };
+    };
+
+
+  const isAdmin =
+    userInfo?.user?.role ===
+    'ADMIN';
 
 
   return (
@@ -55,21 +59,39 @@ function Navbar() {
           Home
         </NavLink>
 
+
         <NavLink to="/tournaments">
           Tournaments
         </NavLink>
+
 
         <NavLink to="/my-tickets">
           My Tickets
         </NavLink>
 
+
         <NavLink to="/leaderboard">
           Leaderboard
         </NavLink>
 
+
         <NavLink to="/support">
           Support
         </NavLink>
+
+
+        {
+          isAdmin && (
+
+            <NavLink
+              to="/admin"
+              className="admin-nav-link"
+            >
+              Admin
+            </NavLink>
+
+          )
+        }
 
 
         {
@@ -97,7 +119,9 @@ function Navbar() {
 
               <button
                 className="logout-button"
-                onClick={handleLogout}
+                onClick={
+                  handleLogout
+                }
               >
                 Logout
               </button>

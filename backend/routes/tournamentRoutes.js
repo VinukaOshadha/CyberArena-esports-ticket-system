@@ -3,8 +3,7 @@ const express =
 
 
 const {
-  getTournaments,
-  createTournament
+  getTournaments
 } = require(
   '../controllers/tournamentController'
 );
@@ -14,18 +13,12 @@ const router =
   express.Router();
 
 
-// Get all tournaments
+// Public tournament list
 router.get(
   '/',
   getTournaments
 );
 
 
-// Create tournament
-router.post(
-  '/',
-  createTournament
-);
-
-
-module.exports = router;
+module.exports =
+  router;
