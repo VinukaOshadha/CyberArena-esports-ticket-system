@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const Tournament = require('../models/Tournament');
 const Ticket = require('../models/Ticket');
+const SupportMessage = require('../models/SupportMessage');
 
 
 // =====================================================
@@ -512,6 +513,183 @@ const deleteTournament =
 
   };
 
+// =====================================================
+// GET ALL SUPPORT MESSAGES
+// =====================================================
+
+const getSupportMessages =
+  async (req, res) => {
+
+    try {
+
+      const supportMessages =
+        await SupportMessage
+          .find({})
+          .sort({
+            createdAt: -1
+          });
+
+
+      return res
+        .status(200)
+        .json({
+
+          success: true,
+
+          count:
+            supportMessages.length,
+
+          supportMessages
+
+        });
+
+
+    } catch (error) {
+
+      console.error(
+        'Get support messages error:',
+        error.message
+      );
+
+
+      return res
+        .status(500)
+        .json({
+
+          success: false,
+
+          message:
+            'Server error while retrieving support messages'
+
+        });
+
+    }
+
+  };
+
+// =====================================================
+// UPDATE SUPPORT MESSAGE STATUS
+// =====================================================
+
+const updateSupportStatus =
+  async (req, res) => {
+
+    try {
+
+      const {
+        id
+      } = req.params;
+
+
+      const {
+        status
+      } = req.body;
+
+
+      if (
+        !mongoose.Types.ObjectId.isValid(
+          id
+        )
+      ) {
+
+        return res
+          .status(400)
+          .json({
+
+            success: false,
+
+            message:
+              'Invalid support message ID'
+
+          });
+
+      }
+
+
+      if (
+        status !== 'OPEN' &&
+        status !== 'RESOLVED'
+      ) {
+
+        return res
+          .status(400)
+          .json({
+
+            success: false,
+
+            message:
+              'Status must be OPEN or RESOLVED'
+
+          });
+
+      }
+
+
+      const supportMessage =
+        await SupportMessage.findById(
+          id
+        );
+
+
+      if (!supportMessage) {
+
+        return res
+          .status(404)
+          .json({
+
+            success: false,
+
+            message:
+              'Support message not found'
+
+          });
+
+      }
+
+
+      supportMessage.status =
+        status;
+
+
+      await supportMessage.save();
+
+
+      return res
+        .status(200)
+        .json({
+
+          success: true,
+
+          message:
+            `Support message marked as ${status}`,
+
+          supportMessage
+
+        });
+
+
+    } catch (error) {
+
+      console.error(
+        'Update support status error:',
+        error
+      );
+
+
+      return res
+        .status(500)
+        .json({
+
+          success: false,
+
+          message:
+            'Server error while updating support message'
+
+        });
+
+    }
+
+  };
 
 module.exports = {
 
@@ -521,6 +699,10 @@ module.exports = {
 
   updateTournament,
 
-  deleteTournament
+  deleteTournament,
+
+  getSupportMessages,
+
+  updateSupportStatus
 
 };

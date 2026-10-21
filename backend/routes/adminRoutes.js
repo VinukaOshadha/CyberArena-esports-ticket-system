@@ -10,7 +10,11 @@ const {
 
   updateTournament,
 
-  deleteTournament
+  deleteTournament,
+
+  getSupportMessages,
+
+  updateSupportStatus
 
 } = require(
   '../controllers/adminController'
@@ -32,10 +36,9 @@ const router =
   express.Router();
 
 
-// All routes below require:
-// 1. Valid JWT
-// 2. ADMIN role
-
+// =====================================================
+// ADMIN CHECK
+// =====================================================
 
 router.get(
   '/check',
@@ -44,6 +47,10 @@ router.get(
   checkAdminAccess
 );
 
+
+// =====================================================
+// TOURNAMENT MANAGEMENT
+// =====================================================
 
 router.post(
   '/tournaments',
@@ -66,6 +73,26 @@ router.delete(
   protect,
   adminOnly,
   deleteTournament
+);
+
+
+// =====================================================
+// SUPPORT MANAGEMENT
+// =====================================================
+
+router.get(
+  '/support',
+  protect,
+  adminOnly,
+  getSupportMessages
+);
+
+
+router.patch(
+  '/support/:id/status',
+  protect,
+  adminOnly,
+  updateSupportStatus
 );
 
 

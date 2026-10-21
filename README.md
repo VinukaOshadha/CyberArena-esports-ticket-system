@@ -582,7 +582,29 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified created and updated tournaments appear on the public Tournaments page
 - Completed protected Admin tournament CRUD functionality
 
+---
 
+## Day 33 Progress
+
+- Created Admin Support Management functionality
+- Added ADMIN-only support message retrieval
+- Added support status update API
+- Added OPEN and RESOLVED support message states
+- Added backend support status validation
+- Protected Admin Support APIs using JWT authentication
+- Protected Admin Support APIs using ADMIN authorization
+- Created the Admin Support Inbox page
+- Connected Admin Support Inbox to MongoDB data
+- Added total, open and resolved support statistics
+- Added ALL, OPEN and RESOLVED message filters
+- Added Mark Resolved functionality
+- Added Reopen Message functionality
+- Added support submission timestamps
+- Added loading, success and error handling
+- Added responsive Admin Support styling
+- Added Admin Inbox navigation
+- Verified PLAYER users cannot access Admin Support functionality
+- Completed the Admin Support Management system
 
 ## Planned Technologies
 

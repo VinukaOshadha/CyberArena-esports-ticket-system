@@ -1,6 +1,6 @@
 import {
-  Routes,
-  Route
+  Route,
+  Routes
 } from 'react-router-dom';
 
 import Navbar
@@ -11,6 +11,7 @@ import ProtectedRoute
 
 import AdminRoute
   from './components/AdminRoute';
+
 
 import Home
   from './pages/Home';
@@ -39,8 +40,12 @@ import Profile
 import AdminDashboard
   from './pages/AdminDashboard';
 
+import AdminSupport
+  from './pages/AdminSupport';
+
 import NotFound
   from './pages/NotFound';
+
 
 import './App.css';
 
@@ -123,6 +128,20 @@ function App() {
             <AdminRoute>
 
               <AdminDashboard />
+
+            </AdminRoute>
+
+          }
+        />
+
+
+        <Route
+          path="/admin/support"
+          element={
+
+            <AdminRoute>
+
+              <AdminSupport />
 
             </AdminRoute>
 

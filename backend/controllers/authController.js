@@ -1,8 +1,7 @@
 const jwt = require('jsonwebtoken');
-
 const User = require('../models/User');
 const Ticket = require('../models/Ticket');
-
+const SupportMessage = require('../models/SupportMessage');
 
 // =====================================================
 // GENERATE JWT

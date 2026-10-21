@@ -1,6 +1,35 @@
+@baseUrl = http://localhost:5000/api
+
+# =========================================================
+# TOKENS
+# =========================================================
+
+@playerToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzUxNDhhMjI5ZjJhY2Q3ZGM2YmEzNSIsImlhdCI6MTc5MjQ2MDEyMiwiZXhwIjoxNzkzMDY0OTIyfQ.e4OOOHhqzur6Rrrq2MIXB_WcUe62IhGwDzmiHU--1QQ
+
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjU5MzA2MCwiZXhwIjoxNzkzMTk3ODYwfQ.5nb9A5rMudItmR_XF7-9itIyRvhOUoX5PQzj7Ah9Dxc
+
+
+# =========================================================
+# TEST IDS
+# =========================================================
+
+@tournamentId = 6ac71de4c9b9825aad7c2be9
+
+@ticketId = 6ac85d46a752ea7a732a73ee
+
+# We will replace this after checking support messages
+@supportMessageId = PASTE_SUPPORT_MESSAGE_ID_HERE
+
+
+
+# =========================================================
+# AUTHENTICATION
+# =========================================================
+
+
 ### Register User
 
-POST http://localhost:5000/api/auth/register
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -10,10 +39,9 @@ Content-Type: application/json
 }
 
 
-
 ### Login User
 
-POST http://localhost:5000/api/auth/login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
@@ -22,66 +50,69 @@ Content-Type: application/json
 }
 
 
-### Get Current User
+### Get Current User - PLAYER
 
-GET http://localhost:5000/api/auth/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MTI1MTcwMiwiZXhwIjoxNzkzODQzNzAyfQ.8rONj-sVArhuDgnn5WVzs8G673eudE8dG9hVSwfdKD0
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{playerToken}}
 
 
 
-### Create Tournament
-
-POST http://localhost:5000/api/tournaments
-Content-Type: application/json
-
-{
-  "title": "Legends Clash",
-  "game": "League of Legends",
-  "description": "Competitive League of Legends championship.",
-  "date": "2026-12-05",
-  "price": 1800,
-  "totalSeats": 200,
-  "image": ""
-}
+# =========================================================
+# PUBLIC TOURNAMENTS
+# =========================================================
 
 
 ### Get All Tournaments
 
-GET http://localhost:5000/api/tournaments
+GET {{baseUrl}}/tournaments
+
+
+
+# =========================================================
+# PLAYER TICKET FUNCTIONS
+# =========================================================
 
 
 ### Reserve Tournament Ticket
 
-POST http://localhost:5000/api/tickets/reserve/6ac71de4c9b9825aad7c2be9
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MTUxNTg4MSwiZXhwIjoxNzk0MTA3ODgxfQ.2H9E1kEGQQTuwfHmnbn7sqqksdZGsjFmTgYBiruqgK4
+POST {{baseUrl}}/tickets/reserve/{{tournamentId}}
+Authorization: Bearer {{playerToken}}
 Content-Type: application/json
 
 
 ### Get My Tickets
 
-GET http://localhost:5000/api/tickets/my
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MTUxNTg4MSwiZXhwIjoxNzk0MTA3ODgxfQ.2H9E1kEGQQTuwfHmnbn7sqqksdZGsjFmTgYBiruqgK4
+GET {{baseUrl}}/tickets/my
+Authorization: Bearer {{playerToken}}
 
 
 ### Cancel Ticket
 
-PATCH http://localhost:5000/api/tickets/cancel/6ac85d46a752ea7a732a73ee
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MTYzMzc1NSwiZXhwIjoxNzk0MjI1NzU1fQ.A1qFQukBx6Sp6WhTpbFp9Aw3oCfLSjVwJs_1LPzSOSk
+PATCH {{baseUrl}}/tickets/cancel/{{ticketId}}
+Authorization: Bearer {{playerToken}}
 Content-Type: application/json
 
 
 
+# =========================================================
+# LEADERBOARD
+# =========================================================
+
+
 ### Get Leaderboard
 
-GET http://localhost:5000/api/leaderboard
+GET {{baseUrl}}/leaderboard
 
 
 
+# =========================================================
+# SUPPORT
+# =========================================================
 
 
 ### Submit Support Message
 
-POST http://localhost:5000/api/support
+POST {{baseUrl}}/support
 Content-Type: application/json
 
 {
@@ -92,9 +123,14 @@ Content-Type: application/json
 
 
 
+# =========================================================
+# ADMIN LOGIN
+# =========================================================
+
+
 ### Admin Login
 
-POST http://localhost:5000/api/auth/login
+POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
 {
@@ -103,33 +139,51 @@ Content-Type: application/json
 }
 
 
+
+# =========================================================
+# ADMIN AUTHORIZATION TESTING
+# =========================================================
+
+
 ### Check Admin Access
 
-GET http://localhost:5000/api/admin/check
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjQzNjE3OCwiZXhwIjoxNzkzMDQwOTc4fQ.t-WqecQ1-E8qQ5k3r2YlhZ3l_bcpfe3zjlVWQwunjvw
+GET {{baseUrl}}/admin/check
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjU5Mzk0MSwiZXhwIjoxNzkzMTk4NzQxfQ.RAsrEV33ynOL_aAyG0BrH_WXy16LjuKTg3uYAoP2Hzo
 
 
 ### Player Trying Admin Route
 
-GET http://localhost:5000/api/admin/check
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzUxNDhhMjI5ZjJhY2Q3ZGM2YmEzNSIsImlhdCI6MTc5MjQ2MDEyMiwiZXhwIjoxNzkzMDY0OTIyfQ.e4OOOHhqzur6Rrrq2MIXB_WcUe62IhGwDzmiHU--1QQ
+GET {{baseUrl}}/admin/check
+Authorization: Bearer {{playerToken}}
 
 
 ### Admin Route Without Token
 
-GET http://localhost:5000/api/admin/check
+GET {{baseUrl}}/admin/check
 
 
-### Current User
 
-GET http://localhost:5000/api/auth/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjQ2MDMzMSwiZXhwIjoxNzkzMDY1MTMxfQ.zOKqZ3SPC0DCykoPon9pvnhat53mGF1jWvqwUSdgF2Q
+# =========================================================
+# CURRENT ADMIN USER
+# =========================================================
+
+
+### Get Current Admin User
+
+GET {{baseUrl}}/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjU5Mzk0MSwiZXhwIjoxNzkzMTk4NzQxfQ.RAsrEV33ynOL_aAyG0BrH_WXy16LjuKTg3uYAoP2Hzo
+
+
+
+# =========================================================
+# ADMIN TOURNAMENT MANAGEMENT
+# =========================================================
 
 
 ### Admin Create Tournament
 
-POST http://localhost:5000/api/admin/tournaments
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjUwMDE1NCwiZXhwIjoxNzkzMTA0OTU0fQ.LF-5rlKM34C2vJ9OneQOJy4gL9xGnDgklsh2q6AhGRA
+POST {{baseUrl}}/admin/tournaments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjU5Mzk0MSwiZXhwIjoxNzkzMTk4NzQxfQ.RAsrEV33ynOL_aAyG0BrH_WXy16LjuKTg3uYAoP2Hzo
 Content-Type: application/json
 
 {
@@ -139,4 +193,73 @@ Content-Type: application/json
   "date": "2026-12-15",
   "price": 2000,
   "totalSeats": 120
+}
+
+
+### Admin Update Tournament
+
+PATCH {{baseUrl}}/admin/tournaments/{{tournamentId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "CyberArena Masters Updated",
+  "game": "Counter-Strike 2",
+  "description": "Updated competitive CyberArena CS2 championship.",
+  "date": "2026-12-20",
+  "price": 2200,
+  "totalSeats": 150
+}
+
+
+### Admin Delete Tournament
+
+DELETE {{baseUrl}}/admin/tournaments/{{tournamentId}}
+Authorization: Bearer {{adminToken}}
+
+
+
+# =========================================================
+# ADMIN SUPPORT MANAGEMENT
+# =========================================================
+
+
+### Get All Support Messages
+
+GET {{baseUrl}}/admin/support
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjU5Mzk0MSwiZXhwIjoxNzkzMTk4NzQxfQ.RAsrEV33ynOL_aAyG0BrH_WXy16LjuKTg3uYAoP2Hzo
+
+
+### Mark Support Message Resolved
+
+PATCH {{baseUrl}}/admin/support/{{supportMessageId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "RESOLVED"
+}
+
+
+### Reopen Support Message
+
+PATCH {{baseUrl}}/admin/support/{{supportMessageId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "OPEN"
+}
+
+
+
+
+### Mark Support Message Resolved
+
+PATCH http://localhost:5000/api/admin/support/6acc65a2ef63a4d35479264d/status
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjU5MzA2MCwiZXhwIjoxNzkzMTk3ODYwfQ.5nb9A5rMudItmR_XF7-9itIyRvhOUoX5PQzj7Ah9Dxc
+Content-Type: application/json
+
+{
+  "status": "RESOLVED"
 }

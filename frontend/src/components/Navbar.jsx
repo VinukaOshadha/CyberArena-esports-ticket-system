@@ -81,17 +81,29 @@ function Navbar() {
 
 
         {
-          isAdmin && (
+  isAdmin && (
 
-            <NavLink
-              to="/admin"
-              className="admin-nav-link"
-            >
-              Admin
-            </NavLink>
+    <>
 
-          )
-        }
+      <NavLink
+        to="/admin"
+        className="admin-nav-link"
+      >
+        Admin
+      </NavLink>
+
+
+      <NavLink
+        to="/admin/support"
+        className="admin-nav-link"
+      >
+        Inbox
+      </NavLink>
+
+    </>
+
+  )
+}
 
 
         {
