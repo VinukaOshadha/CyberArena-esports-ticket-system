@@ -1,16 +1,34 @@
 import {
+  useContext,
   useEffect,
+  useMemo,
   useState
 } from 'react';
+
+import {
+  useNavigate
+} from 'react-router-dom';
 
 import api
   from '../api/axios';
 
-import TournamentCard
-  from '../components/TournamentCard';
+import {
+  AuthContext
+} from '../context/AuthContext';
 
 
 function Tournaments() {
+
+  const navigate =
+    useNavigate();
+
+
+  const {
+    userInfo
+  } = useContext(
+    AuthContext
+  );
+
 
   const [
     tournaments,
@@ -30,12 +48,41 @@ function Tournaments() {
   ] = useState('');
 
 
+  const [
+    success,
+    setSuccess
+  ] = useState('');
+
+
+  const [
+    reservingId,
+    setReservingId
+  ] = useState(null);
+
+
+  const [
+    searchTerm,
+    setSearchTerm
+  ] = useState('');
+
+
+  const [
+    gameFilter,
+    setGameFilter
+  ] = useState('ALL');
+
+
+  // =====================================================
+  // GET TOURNAMENTS
+  // =====================================================
+
   const fetchTournaments =
     async () => {
 
       try {
 
         setLoading(true);
+
         setError('');
 
 
@@ -46,7 +93,8 @@ function Tournaments() {
 
 
         setTournaments(
-          response.data.tournaments
+          response.data.tournaments ||
+          []
         );
 
 
@@ -59,7 +107,8 @@ function Tournaments() {
 
 
         setError(
-          'Unable to load tournaments. Please try again.'
+          error.response?.data?.message ||
+          'Unable to load tournaments.'
         );
 
 
@@ -79,37 +128,202 @@ function Tournaments() {
   }, []);
 
 
-  const handleReserved =
-    (tournamentId) => {
+  // =====================================================
+  // UNIQUE GAME LIST
+  // =====================================================
 
-      setTournaments(
-        (currentTournaments) =>
-          currentTournaments.map(
-            (tournament) => {
+  const games =
+    useMemo(() => {
 
-              if (
-                tournament._id ===
-                tournamentId
-              ) {
+      const gameNames =
+        tournaments
+          .map(
+            (tournament) =>
+              tournament.game
+          )
+          .filter(Boolean);
 
-                return {
-                  ...tournament,
 
-                  availableSeats:
-                    Math.max(
-                      0,
-                      tournament.availableSeats - 1
-                    )
-                };
+      return [
+        ...new Set(
+          gameNames
+        )
+      ].sort();
+
+    }, [
+      tournaments
+    ]);
+
+
+  // =====================================================
+  // SEARCH + FILTER
+  // =====================================================
+
+  const filteredTournaments =
+    useMemo(() => {
+
+      const search =
+        searchTerm
+          .trim()
+          .toLowerCase();
+
+
+      return tournaments.filter(
+        (tournament) => {
+
+          const matchesSearch =
+
+            tournament.title
+              ?.toLowerCase()
+              .includes(search)
+
+            ||
+
+            tournament.game
+              ?.toLowerCase()
+              .includes(search)
+
+            ||
+
+            tournament.description
+              ?.toLowerCase()
+              .includes(search);
+
+
+          const matchesGame =
+
+            gameFilter === 'ALL'
+
+            ||
+
+            tournament.game ===
+              gameFilter;
+
+
+          return (
+            matchesSearch &&
+            matchesGame
+          );
+
+        }
+      );
+
+    }, [
+      tournaments,
+      searchTerm,
+      gameFilter
+    ]);
+
+
+  // =====================================================
+  // CLEAR FILTERS
+  // =====================================================
+
+  const clearFilters =
+    () => {
+
+      setSearchTerm('');
+
+      setGameFilter('ALL');
+
+    };
+
+
+  // =====================================================
+  // RESERVE TICKET
+  // =====================================================
+
+  const handleReserve =
+    async (
+      tournamentId
+    ) => {
+
+      if (!userInfo) {
+
+        navigate('/login');
+
+        return;
+
+      }
+
+
+      try {
+
+        setReservingId(
+          tournamentId
+        );
+
+        setError('');
+
+        setSuccess('');
+
+
+        const response =
+          await api.post(
+            `/tickets/reserve/${tournamentId}`
+          );
+
+
+        setSuccess(
+          response.data.message ||
+          'Ticket reserved successfully.'
+        );
+
+
+        // Reduce available seats on screen
+        setTournaments(
+          (currentTournaments) =>
+            currentTournaments.map(
+              (tournament) => {
+
+                if (
+                  tournament._id ===
+                  tournamentId
+                ) {
+
+                  return {
+
+                    ...tournament,
+
+                    availableSeats:
+                      Math.max(
+                        0,
+                        tournament.availableSeats - 1
+                      )
+
+                  };
+
+                }
+
+
+                return tournament;
 
               }
+            )
+        );
 
 
-              return tournament;
+      } catch (error) {
 
-            }
-          )
-      );
+        console.error(
+          'Reservation error:',
+          error
+        );
+
+
+        setError(
+          error.response?.data?.message ||
+          'Unable to reserve ticket.'
+        );
+
+
+      } finally {
+
+        setReservingId(
+          null
+        );
+
+      }
 
     };
 
@@ -130,19 +344,126 @@ function Tournaments() {
 
       <p className="page-description">
 
-        Explore upcoming CyberArena
-        gaming tournaments and reserve
-        your place in the competition.
+        Discover upcoming CyberArena
+        tournaments and reserve your
+        place in the competition.
 
       </p>
 
 
-      {
-        loading && (
+      {/* =====================================================
+          SEARCH AND FILTER
+          ===================================================== */}
 
-          <p className="loading-message">
-            Loading tournaments...
-          </p>
+      <div className="tournament-filter-panel">
+
+        <div className="tournament-search-box">
+
+          <label>
+            SEARCH
+          </label>
+
+
+          <input
+            type="text"
+            placeholder="Search tournament, game or description..."
+            value={searchTerm}
+            onChange={
+              (event) =>
+                setSearchTerm(
+                  event.target.value
+                )
+            }
+          />
+
+        </div>
+
+
+        <div className="tournament-game-filter">
+
+          <label>
+            GAME
+          </label>
+
+
+          <select
+            value={gameFilter}
+            onChange={
+              (event) =>
+                setGameFilter(
+                  event.target.value
+                )
+            }
+          >
+
+            <option value="ALL">
+              ALL GAMES
+            </option>
+
+
+            {
+              games.map(
+                (game) => (
+
+                  <option
+                    value={game}
+                    key={game}
+                  >
+
+                    {game}
+
+                  </option>
+
+                )
+              )
+            }
+
+          </select>
+
+        </div>
+
+
+        <button
+          type="button"
+          className="clear-filter-button"
+          onClick={
+            clearFilters
+          }
+        >
+
+          CLEAR
+
+        </button>
+
+      </div>
+
+
+      {/* RESULT COUNT */}
+
+      {
+        !loading && (
+
+          <div className="tournament-result-count">
+
+            Showing{' '}
+
+            <strong>
+              {
+                filteredTournaments.length
+              }
+            </strong>
+
+            {' '}of{' '}
+
+            <strong>
+              {
+                tournaments.length
+              }
+            </strong>
+
+            {' '}tournaments
+
+          </div>
 
         )
       }
@@ -160,12 +481,23 @@ function Tournaments() {
 
 
       {
-        !loading &&
-        !error &&
-        tournaments.length === 0 && (
+        success && (
 
-          <p className="empty-message">
-            No tournaments are currently available.
+          <p className="success-message">
+            {success}
+          </p>
+
+        )
+      }
+
+
+      {
+        loading && (
+
+          <p className="loading-message">
+
+            Loading tournaments...
+
           </p>
 
         )
@@ -174,20 +506,164 @@ function Tournaments() {
 
       {
         !loading &&
-        !error &&
-        tournaments.length > 0 && (
+        filteredTournaments.length === 0 && (
+
+          <div className="filter-empty-state">
+
+            <p>
+              No tournaments match
+              your search.
+            </p>
+
+
+            <button
+              type="button"
+              onClick={
+                clearFilters
+              }
+            >
+
+              CLEAR FILTERS
+
+            </button>
+
+          </div>
+
+        )
+      }
+
+
+      {
+        !loading &&
+        filteredTournaments.length > 0 && (
 
           <div className="tournament-grid">
 
             {
-              tournaments.map(
+              filteredTournaments.map(
                 (tournament) => (
 
-                  <TournamentCard
-                    key={tournament._id}
-                    tournament={tournament}
-                    onReserved={handleReserved}
-                  />
+                  <div
+                    className="tournament-card"
+                    key={
+                      tournament._id
+                    }
+                  >
+
+                    <p className="game-name">
+
+                      {
+                        tournament.game
+                      }
+
+                    </p>
+
+
+                    <h2>
+
+                      {
+                        tournament.title
+                      }
+
+                    </h2>
+
+
+                    <p className="tournament-description">
+
+                      {
+                        tournament.description
+                      }
+
+                    </p>
+
+
+                    <div className="tournament-info">
+
+                      <p>
+
+                        <strong>
+                          DATE:
+                        </strong>{' '}
+
+                        {
+                          new Date(
+                            tournament.date
+                          ).toLocaleDateString()
+                        }
+
+                      </p>
+
+
+                      <p>
+
+                        <strong>
+                          PRICE:
+                        </strong>{' '}
+
+                        LKR{' '}
+
+                        {
+                          tournament.price
+                        }
+
+                      </p>
+
+
+                      <p>
+
+                        <strong>
+                          AVAILABLE:
+                        </strong>{' '}
+
+                        {
+                          tournament.availableSeats
+                        }
+
+                        {' '}/{' '}
+
+                        {
+                          tournament.totalSeats
+                        }
+
+                      </p>
+
+                    </div>
+
+
+                    <button
+                      className="reserve-button"
+                      disabled={
+                        reservingId ===
+                          tournament._id
+
+                        ||
+
+                        tournament.availableSeats <= 0
+                      }
+                      onClick={
+                        () =>
+                          handleReserve(
+                            tournament._id
+                          )
+                      }
+                    >
+
+                      {
+                        tournament.availableSeats <= 0
+
+                          ? 'SOLD OUT'
+
+                          : reservingId ===
+                            tournament._id
+
+                            ? 'RESERVING...'
+
+                            : 'RESERVE TICKET'
+                      }
+
+                    </button>
+
+                  </div>
 
                 )
               )

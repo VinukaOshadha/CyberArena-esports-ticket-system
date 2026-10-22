@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useMemo,
   useState
 } from 'react';
 
@@ -28,8 +29,8 @@ function MyTickets() {
 
 
   const [
-    message,
-    setMessage
+    success,
+    setSuccess
   ] = useState('');
 
 
@@ -39,12 +40,23 @@ function MyTickets() {
   ] = useState(null);
 
 
+  const [
+    statusFilter,
+    setStatusFilter
+  ] = useState('ALL');
+
+
+  // =====================================================
+  // GET MY TICKETS
+  // =====================================================
+
   const fetchTickets =
     async () => {
 
       try {
 
         setLoading(true);
+
         setError('');
 
 
@@ -55,11 +67,18 @@ function MyTickets() {
 
 
         setTickets(
-          response.data.tickets
+          response.data.tickets ||
+          []
         );
 
 
       } catch (error) {
+
+        console.error(
+          'Ticket loading error:',
+          error
+        );
+
 
         setError(
           error.response?.data?.message ||
@@ -83,16 +102,70 @@ function MyTickets() {
   }, []);
 
 
-  const handleCancel =
-    async (ticketId) => {
+  // =====================================================
+  // COUNTS
+  // =====================================================
 
-      const confirmCancel =
+  const reservedCount =
+    tickets.filter(
+      (ticket) =>
+        ticket.status ===
+        'RESERVED'
+    ).length;
+
+
+  const cancelledCount =
+    tickets.filter(
+      (ticket) =>
+        ticket.status ===
+        'CANCELLED'
+    ).length;
+
+
+  // =====================================================
+  // FILTER
+  // =====================================================
+
+  const filteredTickets =
+    useMemo(() => {
+
+      if (
+        statusFilter === 'ALL'
+      ) {
+
+        return tickets;
+
+      }
+
+
+      return tickets.filter(
+        (ticket) =>
+          ticket.status ===
+          statusFilter
+      );
+
+    }, [
+      tickets,
+      statusFilter
+    ]);
+
+
+  // =====================================================
+  // CANCEL TICKET
+  // =====================================================
+
+  const handleCancel =
+    async (
+      ticketId
+    ) => {
+
+      const confirmed =
         window.confirm(
           'Are you sure you want to cancel this ticket?'
         );
 
 
-      if (!confirmCancel) {
+      if (!confirmed) {
 
         return;
 
@@ -106,18 +179,14 @@ function MyTickets() {
         );
 
         setError('');
-        setMessage('');
+
+        setSuccess('');
 
 
         const response =
           await api.patch(
             `/tickets/cancel/${ticketId}`
           );
-
-
-        setMessage(
-          response.data.message
-        );
 
 
         setTickets(
@@ -131,9 +200,12 @@ function MyTickets() {
                 ) {
 
                   return {
+
                     ...ticket,
+
                     status:
                       'CANCELLED'
+
                   };
 
                 }
@@ -146,7 +218,19 @@ function MyTickets() {
         );
 
 
+        setSuccess(
+          response.data.message ||
+          'Ticket cancelled successfully.'
+        );
+
+
       } catch (error) {
+
+        console.error(
+          'Ticket cancellation error:',
+          error
+        );
+
 
         setError(
           error.response?.data?.message ||
@@ -179,15 +263,129 @@ function MyTickets() {
       </h1>
 
 
-      {
-        message && (
+      <p className="page-description">
 
-          <p className="success-message">
-            {message}
-          </p>
+        Review your CyberArena
+        tournament reservations and
+        ticket history.
 
-        )
-      }
+      </p>
+
+
+      {/* =====================================================
+          TICKET STATISTICS
+          ===================================================== */}
+
+      <div className="ticket-summary-grid">
+
+        <div className="ticket-summary-card">
+
+          <span>
+            TOTAL
+          </span>
+
+          <strong>
+            {tickets.length}
+          </strong>
+
+        </div>
+
+
+        <div className="ticket-summary-card">
+
+          <span>
+            RESERVED
+          </span>
+
+          <strong>
+            {reservedCount}
+          </strong>
+
+        </div>
+
+
+        <div className="ticket-summary-card">
+
+          <span>
+            CANCELLED
+          </span>
+
+          <strong>
+            {cancelledCount}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      {/* =====================================================
+          FILTER BUTTONS
+          ===================================================== */}
+
+      <div className="ticket-filter-buttons">
+
+        <button
+          className={
+            statusFilter === 'ALL'
+              ? 'active'
+              : ''
+          }
+          onClick={
+            () =>
+              setStatusFilter(
+                'ALL'
+              )
+          }
+        >
+
+          ALL
+
+        </button>
+
+
+        <button
+          className={
+            statusFilter ===
+              'RESERVED'
+
+              ? 'active'
+              : ''
+          }
+          onClick={
+            () =>
+              setStatusFilter(
+                'RESERVED'
+              )
+          }
+        >
+
+          RESERVED
+
+        </button>
+
+
+        <button
+          className={
+            statusFilter ===
+              'CANCELLED'
+
+              ? 'active'
+              : ''
+          }
+          onClick={
+            () =>
+              setStatusFilter(
+                'CANCELLED'
+              )
+          }
+        >
+
+          CANCELLED
+
+        </button>
+
+      </div>
 
 
       {
@@ -202,10 +400,23 @@ function MyTickets() {
 
 
       {
+        success && (
+
+          <p className="success-message">
+            {success}
+          </p>
+
+        )
+      }
+
+
+      {
         loading && (
 
           <p className="loading-message">
+
             Loading your tickets...
+
           </p>
 
         )
@@ -214,12 +425,12 @@ function MyTickets() {
 
       {
         !loading &&
-        tickets.length === 0 && (
+        filteredTickets.length === 0 && (
 
           <p className="empty-message">
 
-            You have not reserved any
-            tournament tickets yet.
+            No tickets found
+            for this filter.
 
           </p>
 
@@ -229,50 +440,32 @@ function MyTickets() {
 
       {
         !loading &&
-        tickets.length > 0 && (
+        filteredTickets.length > 0 && (
 
           <div className="tickets-list">
 
             {
-              tickets.map(
+              filteredTickets.map(
                 (ticket) => {
 
                   const tournament =
                     ticket.tournament;
 
 
-                  const formattedDate =
-                    tournament?.date
-                      ? new Date(
-                          tournament.date
-                        ).toLocaleDateString(
-                          'en-US',
-                          {
-                            year:
-                              'numeric',
-
-                            month:
-                              'short',
-
-                            day:
-                              'numeric'
-                          }
-                        )
-                      : 'N/A';
-
-
                   return (
 
                     <div
                       className="ticket-card"
-                      key={ticket._id}
+                      key={
+                        ticket._id
+                      }
                     >
 
                       <p className="small-title">
 
                         {
                           tournament?.game ||
-                          'TOURNAMENT'
+                          'CYBERARENA EVENT'
                         }
 
                       </p>
@@ -289,87 +482,119 @@ function MyTickets() {
 
 
                       <p>
+
                         <strong>
-                          Ticket Code:
-                        </strong>{' '}
-
-                        {ticket.ticketCode}
-                      </p>
-
-
-                      <p>
-                        <strong>
-                          Date:
-                        </strong>{' '}
-
-                        {formattedDate}
-                      </p>
-
-
-                      <p>
-                        <strong>
-                          Price:
-                        </strong>{' '}
-
-                        LKR {ticket.price}
-                      </p>
-
-
-                      <p>
-                        <strong>
-                          Reserved:
+                          TICKET CODE:
                         </strong>{' '}
 
                         {
-                          new Date(
-                            ticket.reservedAt
-                          ).toLocaleString()
+                          ticket.ticketCode
                         }
+
                       </p>
 
 
-                      <span
+                      <p>
+
+                        <strong>
+                          DATE:
+                        </strong>{' '}
+
+                        {
+                          tournament?.date
+
+                            ? new Date(
+                                tournament.date
+                              ).toLocaleDateString()
+
+                            : 'N/A'
+                        }
+
+                      </p>
+
+
+                      <p>
+
+                        <strong>
+                          PRICE:
+                        </strong>{' '}
+
+                        LKR{' '}
+
+                        {
+                          ticket.price
+                        }
+
+                      </p>
+
+
+                      <p>
+
+                        <strong>
+                          RESERVED:
+                        </strong>{' '}
+
+                        {
+                          ticket.reservedAt
+
+                            ? new Date(
+                                ticket.reservedAt
+                              ).toLocaleString()
+
+                            : 'N/A'
+                        }
+
+                      </p>
+
+
+                      <p
                         className={
                           ticket.status ===
-                          'CANCELLED'
+                            'CANCELLED'
+
                             ? 'ticket-status cancelled'
+
                             : 'ticket-status'
                         }
                       >
 
-                        {ticket.status}
+                        {
+                          ticket.status
+                        }
 
-                      </span>
+                      </p>
 
 
                       {
                         ticket.status ===
-                        'RESERVED' && (
+                          'RESERVED'
 
-                          <button
-                            className="cancel-ticket-button"
-                            onClick={
-                              () =>
-                                handleCancel(
-                                  ticket._id
-                                )
-                            }
-                            disabled={
-                              cancellingId ===
+                        &&
+
+                        <button
+                          className="cancel-ticket-button"
+                          disabled={
+                            cancellingId ===
+                            ticket._id
+                          }
+                          onClick={
+                            () =>
+                              handleCancel(
+                                ticket._id
+                              )
+                          }
+                        >
+
+                          {
+                            cancellingId ===
                               ticket._id
-                            }
-                          >
 
-                            {
-                              cancellingId ===
-                              ticket._id
-                                ? 'CANCELLING...'
-                                : 'CANCEL TICKET'
-                            }
+                              ? 'CANCELLING...'
 
-                          </button>
+                              : 'CANCEL TICKET'
+                          }
 
-                        )
+                        </button>
                       }
 
                     </div>
