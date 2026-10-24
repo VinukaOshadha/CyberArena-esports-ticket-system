@@ -9,8 +9,11 @@ const api = axios.create({
 });
 
 
-// Automatically add JWT token
-// to protected API requests
+// =====================================================
+// REQUEST INTERCEPTOR
+// Attach JWT to requests
+// =====================================================
+
 api.interceptors.request.use(
 
   (config) => {
@@ -26,10 +29,14 @@ api.interceptors.request.use(
       if (storedUser) {
 
         const userInfo =
-          JSON.parse(storedUser);
+          JSON.parse(
+            storedUser
+          );
 
 
-        if (userInfo.token) {
+        if (
+          userInfo.token
+        ) {
 
           config.headers.Authorization =
             `Bearer ${userInfo.token}`;
@@ -53,9 +60,57 @@ api.interceptors.request.use(
 
   },
 
+
+  (error) =>
+    Promise.reject(error)
+
+);
+
+
+// =====================================================
+// RESPONSE INTERCEPTOR
+// Remove expired/invalid login
+// =====================================================
+
+api.interceptors.response.use(
+
+  (response) =>
+    response,
+
+
   (error) => {
 
-    return Promise.reject(error);
+    if (
+      error.response?.status === 401
+    ) {
+
+      const hadUser =
+        localStorage.getItem(
+          'userInfo'
+        );
+
+
+      if (hadUser) {
+
+        localStorage.removeItem(
+          'userInfo'
+        );
+
+
+        window.dispatchEvent(
+          new Event(
+            'cyberarena-auth-expired'
+          )
+        );
+
+      }
+
+    }
+
+
+    return Promise.reject(
+      error
+    );
 
   }
 

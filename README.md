@@ -656,6 +656,39 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Verified CyberArena backend health endpoint
 - Completed backend security and configuration cleanup
 
+
+---
+
+## Day 36 Progress
+
+- Performed full CyberArena system testing
+- Tested user registration and duplicate registration handling
+- Tested user login and invalid login handling
+- Verified PLAYER route protection
+- Verified ADMIN route protection
+- Tested tournament loading and event information
+- Tested tournament search functionality
+- Tested tournament game filtering
+- Tested authenticated ticket reservations
+- Tested duplicate reservation prevention
+- Tested My Tickets loading
+- Tested RESERVED and CANCELLED ticket filtering
+- Tested ticket cancellation and seat restoration
+- Tested MongoDB leaderboard data
+- Tested support message submission
+- Tested Admin Support Inbox functionality
+- Tested OPEN and RESOLVED support message states
+- Tested Admin tournament creation, editing and deletion
+- Tested player profile statistics
+- Tested custom 404 page
+- Tested direct URL access and page refreshes
+- Added automatic invalid-session cleanup
+- Added Axios 401 response handling
+- Verified browser console and API network responses
+- Tested responsive layouts across mobile, tablet and desktop
+- Reviewed environment variables and JWT token safety
+- Completed final CyberArena functional QA testing
+
 ## Planned Technologies
 
 - React
