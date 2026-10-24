@@ -10,45 +10,24 @@ import api
 
 function MyTickets() {
 
-  const [
-    tickets,
-    setTickets
-  ] = useState([]);
+  const [tickets, setTickets] =
+    useState([]);
 
+  const [loading, setLoading] =
+    useState(true);
 
-  const [
-    loading,
-    setLoading
-  ] = useState(true);
+  const [error, setError] =
+    useState('');
 
+  const [success, setSuccess] =
+    useState('');
 
-  const [
-    error,
-    setError
-  ] = useState('');
+  const [cancellingId, setCancellingId] =
+    useState(null);
 
+  const [statusFilter, setStatusFilter] =
+    useState('ALL');
 
-  const [
-    success,
-    setSuccess
-  ] = useState('');
-
-
-  const [
-    cancellingId,
-    setCancellingId
-  ] = useState(null);
-
-
-  const [
-    statusFilter,
-    setStatusFilter
-  ] = useState('ALL');
-
-
-  // =====================================================
-  // GET MY TICKETS
-  // =====================================================
 
   const fetchTickets =
     async () => {
@@ -56,7 +35,6 @@ function MyTickets() {
       try {
 
         setLoading(true);
-
         setError('');
 
 
@@ -73,12 +51,6 @@ function MyTickets() {
 
 
       } catch (error) {
-
-        console.error(
-          'Ticket loading error:',
-          error
-        );
-
 
         setError(
           error.response?.data?.message ||
@@ -102,10 +74,6 @@ function MyTickets() {
   }, []);
 
 
-  // =====================================================
-  // COUNTS
-  // =====================================================
-
   const reservedCount =
     tickets.filter(
       (ticket) =>
@@ -121,10 +89,6 @@ function MyTickets() {
         'CANCELLED'
     ).length;
 
-
-  // =====================================================
-  // FILTER
-  // =====================================================
 
   const filteredTickets =
     useMemo(() => {
@@ -150,14 +114,8 @@ function MyTickets() {
     ]);
 
 
-  // =====================================================
-  // CANCEL TICKET
-  // =====================================================
-
   const handleCancel =
-    async (
-      ticketId
-    ) => {
+    async (ticketId) => {
 
       const confirmed =
         window.confirm(
@@ -166,20 +124,15 @@ function MyTickets() {
 
 
       if (!confirmed) {
-
         return;
-
       }
 
 
       try {
 
-        setCancellingId(
-          ticketId
-        );
+        setCancellingId(ticketId);
 
         setError('');
-
         setSuccess('');
 
 
@@ -190,8 +143,8 @@ function MyTickets() {
 
 
         setTickets(
-          (currentTickets) =>
-            currentTickets.map(
+          (current) =>
+            current.map(
               (ticket) => {
 
                 if (
@@ -200,12 +153,8 @@ function MyTickets() {
                 ) {
 
                   return {
-
                     ...ticket,
-
-                    status:
-                      'CANCELLED'
-
+                    status: 'CANCELLED'
                   };
 
                 }
@@ -226,12 +175,6 @@ function MyTickets() {
 
       } catch (error) {
 
-        console.error(
-          'Ticket cancellation error:',
-          error
-        );
-
-
         setError(
           error.response?.data?.message ||
           'Unable to cancel ticket.'
@@ -240,9 +183,7 @@ function MyTickets() {
 
       } finally {
 
-        setCancellingId(
-          null
-        );
+        setCancellingId(null);
 
       }
 
@@ -264,25 +205,16 @@ function MyTickets() {
 
 
       <p className="page-description">
-
-        Review your CyberArena
-        tournament reservations and
-        ticket history.
-
+        Review your tournament reservations
+        and ticket history.
       </p>
 
-
-      {/* =====================================================
-          TICKET STATISTICS
-          ===================================================== */}
 
       <div className="ticket-summary-grid">
 
         <div className="ticket-summary-card">
 
-          <span>
-            TOTAL
-          </span>
+          <span>TOTAL</span>
 
           <strong>
             {tickets.length}
@@ -293,9 +225,7 @@ function MyTickets() {
 
         <div className="ticket-summary-card">
 
-          <span>
-            RESERVED
-          </span>
+          <span>RESERVED</span>
 
           <strong>
             {reservedCount}
@@ -306,9 +236,7 @@ function MyTickets() {
 
         <div className="ticket-summary-card">
 
-          <span>
-            CANCELLED
-          </span>
+          <span>CANCELLED</span>
 
           <strong>
             {cancelledCount}
@@ -318,10 +246,6 @@ function MyTickets() {
 
       </div>
 
-
-      {/* =====================================================
-          FILTER BUTTONS
-          ===================================================== */}
 
       <div className="ticket-filter-buttons">
 
@@ -333,22 +257,16 @@ function MyTickets() {
           }
           onClick={
             () =>
-              setStatusFilter(
-                'ALL'
-              )
+              setStatusFilter('ALL')
           }
         >
-
           ALL
-
         </button>
 
 
         <button
           className={
-            statusFilter ===
-              'RESERVED'
-
+            statusFilter === 'RESERVED'
               ? 'active'
               : ''
           }
@@ -359,17 +277,13 @@ function MyTickets() {
               )
           }
         >
-
           RESERVED
-
         </button>
 
 
         <button
           className={
-            statusFilter ===
-              'CANCELLED'
-
+            statusFilter === 'CANCELLED'
               ? 'active'
               : ''
           }
@@ -380,9 +294,7 @@ function MyTickets() {
               )
           }
         >
-
           CANCELLED
-
         </button>
 
       </div>
@@ -390,35 +302,27 @@ function MyTickets() {
 
       {
         error && (
-
           <p className="error-message">
             {error}
           </p>
-
         )
       }
 
 
       {
         success && (
-
           <p className="success-message">
             {success}
           </p>
-
         )
       }
 
 
       {
         loading && (
-
           <p className="loading-message">
-
             Loading your tickets...
-
           </p>
-
         )
       }
 
@@ -428,10 +332,7 @@ function MyTickets() {
         filteredTickets.length === 0 && (
 
           <p className="empty-message">
-
-            No tickets found
-            for this filter.
-
+            No tickets found for this filter.
           </p>
 
         )
@@ -456,9 +357,7 @@ function MyTickets() {
 
                     <div
                       className="ticket-card"
-                      key={
-                        ticket._id
-                      }
+                      key={ticket._id}
                     >
 
                       <p className="small-title">
@@ -482,15 +381,10 @@ function MyTickets() {
 
 
                       <p>
-
                         <strong>
                           TICKET CODE:
                         </strong>{' '}
-
-                        {
-                          ticket.ticketCode
-                        }
-
+                        {ticket.ticketCode}
                       </p>
 
 
@@ -514,61 +408,29 @@ function MyTickets() {
 
 
                       <p>
-
                         <strong>
                           PRICE:
                         </strong>{' '}
-
-                        LKR{' '}
-
-                        {
-                          ticket.price
-                        }
-
-                      </p>
-
-
-                      <p>
-
-                        <strong>
-                          RESERVED:
-                        </strong>{' '}
-
-                        {
-                          ticket.reservedAt
-
-                            ? new Date(
-                                ticket.reservedAt
-                              ).toLocaleString()
-
-                            : 'N/A'
-                        }
-
+                        LKR {ticket.price}
                       </p>
 
 
                       <p
                         className={
                           ticket.status ===
-                            'CANCELLED'
+                          'CANCELLED'
 
                             ? 'ticket-status cancelled'
 
                             : 'ticket-status'
                         }
                       >
-
-                        {
-                          ticket.status
-                        }
-
+                        {ticket.status}
                       </p>
 
 
                       {
-                        ticket.status ===
-                          'RESERVED'
-
+                        ticket.status === 'RESERVED'
                         &&
 
                         <button
@@ -586,11 +448,8 @@ function MyTickets() {
                         >
 
                           {
-                            cancellingId ===
-                              ticket._id
-
+                            cancellingId === ticket._id
                               ? 'CANCELLING...'
-
                               : 'CANCEL TICKET'
                           }
 

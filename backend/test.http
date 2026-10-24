@@ -53,7 +53,7 @@ Content-Type: application/json
 ### Get Current User - PLAYER
 
 GET {{baseUrl}}/auth/me
-Authorization: Bearer {{playerToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzUxNDhhMjI5ZjJhY2Q3ZGM2YmEzNSIsImlhdCI6MTc5MjQ2MDEyMiwiZXhwIjoxNzkzMDY0OTIyfQ.e4OOOHhqzur6Rrrq2MIXB_WcUe62IhGwDzmiHU--1QQ
 
 
 
@@ -76,20 +76,20 @@ GET {{baseUrl}}/tournaments
 ### Reserve Tournament Ticket
 
 POST {{baseUrl}}/tickets/reserve/{{tournamentId}}
-Authorization: Bearer {{playerToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzUxNDhhMjI5ZjJhY2Q3ZGM2YmEzNSIsImlhdCI6MTc5MjQ2MDEyMiwiZXhwIjoxNzkzMDY0OTIyfQ.e4OOOHhqzur6Rrrq2MIXB_WcUe62IhGwDzmiHU--1QQ
 Content-Type: application/json
 
 
 ### Get My Tickets
 
 GET {{baseUrl}}/tickets/my
-Authorization: Bearer {{playerToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzUxNDhhMjI5ZjJhY2Q3ZGM2YmEzNSIsImlhdCI6MTc5MjQ2MDEyMiwiZXhwIjoxNzkzMDY0OTIyfQ.e4OOOHhqzur6Rrrq2MIXB_WcUe62IhGwDzmiHU--1QQ
 
 
 ### Cancel Ticket
 
 PATCH {{baseUrl}}/tickets/cancel/{{ticketId}}
-Authorization: Bearer {{playerToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzUxNDhhMjI5ZjJhY2Q3ZGM2YmEzNSIsImlhdCI6MTc5MjQ2MDEyMiwiZXhwIjoxNzkzMDY0OTIyfQ.e4OOOHhqzur6Rrrq2MIXB_WcUe62IhGwDzmiHU--1QQ
 Content-Type: application/json
 
 
@@ -154,7 +154,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkO
 ### Player Trying Admin Route
 
 GET {{baseUrl}}/admin/check
-Authorization: Bearer {{playerToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzUxNDhhMjI5ZjJhY2Q3ZGM2YmEzNSIsImlhdCI6MTc5MjQ2MDEyMiwiZXhwIjoxNzkzMDY0OTIyfQ.e4OOOHhqzur6Rrrq2MIXB_WcUe62IhGwDzmiHU--1QQ
 
 
 ### Admin Route Without Token
@@ -199,7 +199,7 @@ Content-Type: application/json
 ### Admin Update Tournament
 
 PATCH {{baseUrl}}/admin/tournaments/{{tournamentId}}
-Authorization: Bearer {{adminToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjU5MzA2MCwiZXhwIjoxNzkzMTk3ODYwfQ.5nb9A5rMudItmR_XF7-9itIyRvhOUoX5PQzj7Ah9Dxc
 Content-Type: application/json
 
 {
@@ -215,7 +215,7 @@ Content-Type: application/json
 ### Admin Delete Tournament
 
 DELETE {{baseUrl}}/admin/tournaments/{{tournamentId}}
-Authorization: Bearer {{adminToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjU5MzA2MCwiZXhwIjoxNzkzMTk3ODYwfQ.5nb9A5rMudItmR_XF7-9itIyRvhOUoX5PQzj7Ah9Dxc
 
 
 
@@ -233,7 +233,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkO
 ### Mark Support Message Resolved
 
 PATCH {{baseUrl}}/admin/support/{{supportMessageId}}/status
-Authorization: Bearer {{adminToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjU5MzA2MCwiZXhwIjoxNzkzMTk3ODYwfQ.5nb9A5rMudItmR_XF7-9itIyRvhOUoX5PQzj7Ah9Dxc
 Content-Type: application/json
 
 {
@@ -244,7 +244,7 @@ Content-Type: application/json
 ### Reopen Support Message
 
 PATCH {{baseUrl}}/admin/support/{{supportMessageId}}/status
-Authorization: Bearer {{adminToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhYzNiYmFkODc4N2Q1NTY0MmVhMDU0YyIsImlhdCI6MTc5MjU5MzA2MCwiZXhwIjoxNzkzMTk3ODYwfQ.5nb9A5rMudItmR_XF7-9itIyRvhOUoX5PQzj7Ah9Dxc
 Content-Type: application/json
 
 {

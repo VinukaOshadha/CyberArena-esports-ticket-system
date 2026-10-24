@@ -30,51 +30,27 @@ function Tournaments() {
   );
 
 
-  const [
-    tournaments,
-    setTournaments
-  ] = useState([]);
+  const [tournaments, setTournaments] =
+    useState([]);
 
+  const [loading, setLoading] =
+    useState(true);
 
-  const [
-    loading,
-    setLoading
-  ] = useState(true);
+  const [error, setError] =
+    useState('');
 
+  const [success, setSuccess] =
+    useState('');
 
-  const [
-    error,
-    setError
-  ] = useState('');
+  const [reservingId, setReservingId] =
+    useState(null);
 
+  const [searchTerm, setSearchTerm] =
+    useState('');
 
-  const [
-    success,
-    setSuccess
-  ] = useState('');
+  const [gameFilter, setGameFilter] =
+    useState('ALL');
 
-
-  const [
-    reservingId,
-    setReservingId
-  ] = useState(null);
-
-
-  const [
-    searchTerm,
-    setSearchTerm
-  ] = useState('');
-
-
-  const [
-    gameFilter,
-    setGameFilter
-  ] = useState('ALL');
-
-
-  // =====================================================
-  // GET TOURNAMENTS
-  // =====================================================
 
   const fetchTournaments =
     async () => {
@@ -82,7 +58,6 @@ function Tournaments() {
       try {
 
         setLoading(true);
-
         setError('');
 
 
@@ -99,12 +74,6 @@ function Tournaments() {
 
 
       } catch (error) {
-
-        console.error(
-          'Tournament loading error:',
-          error
-        );
-
 
         setError(
           error.response?.data?.message ||
@@ -128,10 +97,6 @@ function Tournaments() {
   }, []);
 
 
-  // =====================================================
-  // UNIQUE GAME LIST
-  // =====================================================
-
   const games =
     useMemo(() => {
 
@@ -145,19 +110,11 @@ function Tournaments() {
 
 
       return [
-        ...new Set(
-          gameNames
-        )
+        ...new Set(gameNames)
       ].sort();
 
-    }, [
-      tournaments
-    ]);
+    }, [tournaments]);
 
-
-  // =====================================================
-  // SEARCH + FILTER
-  // =====================================================
 
   const filteredTournaments =
     useMemo(() => {
@@ -215,28 +172,17 @@ function Tournaments() {
     ]);
 
 
-  // =====================================================
-  // CLEAR FILTERS
-  // =====================================================
-
   const clearFilters =
     () => {
 
       setSearchTerm('');
-
       setGameFilter('ALL');
 
     };
 
 
-  // =====================================================
-  // RESERVE TICKET
-  // =====================================================
-
   const handleReserve =
-    async (
-      tournamentId
-    ) => {
+    async (tournamentId) => {
 
       if (!userInfo) {
 
@@ -254,7 +200,6 @@ function Tournaments() {
         );
 
         setError('');
-
         setSuccess('');
 
 
@@ -270,10 +215,9 @@ function Tournaments() {
         );
 
 
-        // Reduce available seats on screen
         setTournaments(
-          (currentTournaments) =>
-            currentTournaments.map(
+          (current) =>
+            current.map(
               (tournament) => {
 
                 if (
@@ -282,7 +226,6 @@ function Tournaments() {
                 ) {
 
                   return {
-
                     ...tournament,
 
                     availableSeats:
@@ -290,11 +233,9 @@ function Tournaments() {
                         0,
                         tournament.availableSeats - 1
                       )
-
                   };
 
                 }
-
 
                 return tournament;
 
@@ -305,12 +246,6 @@ function Tournaments() {
 
       } catch (error) {
 
-        console.error(
-          'Reservation error:',
-          error
-        );
-
-
         setError(
           error.response?.data?.message ||
           'Unable to reserve ticket.'
@@ -319,9 +254,7 @@ function Tournaments() {
 
       } finally {
 
-        setReservingId(
-          null
-        );
+        setReservingId(null);
 
       }
 
@@ -343,17 +276,10 @@ function Tournaments() {
 
 
       <p className="page-description">
-
-        Discover upcoming CyberArena
-        tournaments and reserve your
-        place in the competition.
-
+        Discover upcoming CyberArena tournaments
+        and reserve your place.
       </p>
 
-
-      {/* =====================================================
-          SEARCH AND FILTER
-          ===================================================== */}
 
       <div className="tournament-filter-panel">
 
@@ -362,7 +288,6 @@ function Tournaments() {
           <label>
             SEARCH
           </label>
-
 
           <input
             type="text"
@@ -385,7 +310,6 @@ function Tournaments() {
             GAME
           </label>
 
-
           <select
             value={gameFilter}
             onChange={
@@ -400,7 +324,6 @@ function Tournaments() {
               ALL GAMES
             </option>
 
-
             {
               games.map(
                 (game) => (
@@ -409,9 +332,7 @@ function Tournaments() {
                     value={game}
                     key={game}
                   >
-
                     {game}
-
                   </option>
 
                 )
@@ -424,46 +345,35 @@ function Tournaments() {
 
 
         <button
-          type="button"
           className="clear-filter-button"
-          onClick={
-            clearFilters
-          }
+          onClick={clearFilters}
         >
-
           CLEAR
-
         </button>
 
       </div>
 
 
-      {/* RESULT COUNT */}
-
       {
         !loading && (
 
-          <div className="tournament-result-count">
+          <p className="tournament-result-count">
 
             Showing{' '}
 
             <strong>
-              {
-                filteredTournaments.length
-              }
+              {filteredTournaments.length}
             </strong>
 
             {' '}of{' '}
 
             <strong>
-              {
-                tournaments.length
-              }
+              {tournaments.length}
             </strong>
 
             {' '}tournaments
 
-          </div>
+          </p>
 
         )
       }
@@ -471,35 +381,27 @@ function Tournaments() {
 
       {
         error && (
-
           <p className="error-message">
             {error}
           </p>
-
         )
       }
 
 
       {
         success && (
-
           <p className="success-message">
             {success}
           </p>
-
         )
       }
 
 
       {
         loading && (
-
           <p className="loading-message">
-
             Loading tournaments...
-
           </p>
-
         )
       }
 
@@ -511,20 +413,11 @@ function Tournaments() {
           <div className="filter-empty-state">
 
             <p>
-              No tournaments match
-              your search.
+              No tournaments match your search.
             </p>
 
-
-            <button
-              type="button"
-              onClick={
-                clearFilters
-              }
-            >
-
+            <button onClick={clearFilters}>
               CLEAR FILTERS
-
             </button>
 
           </div>
@@ -545,86 +438,47 @@ function Tournaments() {
 
                   <div
                     className="tournament-card"
-                    key={
-                      tournament._id
-                    }
+                    key={tournament._id}
                   >
 
                     <p className="game-name">
-
-                      {
-                        tournament.game
-                      }
-
+                      {tournament.game}
                     </p>
 
 
                     <h2>
-
-                      {
-                        tournament.title
-                      }
-
+                      {tournament.title}
                     </h2>
 
 
                     <p className="tournament-description">
-
-                      {
-                        tournament.description
-                      }
-
+                      {tournament.description}
                     </p>
 
 
                     <div className="tournament-info">
 
                       <p>
-
-                        <strong>
-                          DATE:
-                        </strong>{' '}
-
+                        <strong>DATE:</strong>{' '}
                         {
                           new Date(
                             tournament.date
                           ).toLocaleDateString()
                         }
-
                       </p>
 
 
                       <p>
-
-                        <strong>
-                          PRICE:
-                        </strong>{' '}
-
-                        LKR{' '}
-
-                        {
-                          tournament.price
-                        }
-
+                        <strong>PRICE:</strong>{' '}
+                        LKR {tournament.price}
                       </p>
 
 
                       <p>
-
-                        <strong>
-                          AVAILABLE:
-                        </strong>{' '}
-
-                        {
-                          tournament.availableSeats
-                        }
-
-                        {' '}/{' '}
-
-                        {
-                          tournament.totalSeats
-                        }
-
+                        <strong>AVAILABLE:</strong>{' '}
+                        {tournament.availableSeats}
+                        {' / '}
+                        {tournament.totalSeats}
                       </p>
 
                     </div>
@@ -635,9 +489,7 @@ function Tournaments() {
                       disabled={
                         reservingId ===
                           tournament._id
-
                         ||
-
                         tournament.availableSeats <= 0
                       }
                       onClick={
@@ -653,8 +505,7 @@ function Tournaments() {
 
                           ? 'SOLD OUT'
 
-                          : reservingId ===
-                            tournament._id
+                          : reservingId === tournament._id
 
                             ? 'RESERVING...'
 

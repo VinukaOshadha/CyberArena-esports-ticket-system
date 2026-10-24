@@ -635,6 +635,27 @@ CyberArena is a full-stack eSports tournament ticket reservation web application
 - Added responsive ticket filter controls
 - Improved CyberArena frontend usability and event discovery
 
+---
+
+
+## Day 35 Progress
+
+- Improved backend security configuration
+- Added Helmet security middleware
+- Disabled the Express X-Powered-By header
+- Added restricted CORS configuration
+- Added FRONTEND_URL environment configuration
+- Added request-body size protection
+- Added API 404 JSON handling
+- Added centralized server error handling
+- Updated environment example configuration
+- Verified .env is excluded from Git
+- Removed real JWT tokens from API test files
+- Verified protected PLAYER routes
+- Verified ADMIN authorization
+- Verified CyberArena backend health endpoint
+- Completed backend security and configuration cleanup
+
 ## Planned Technologies
 
 - React
