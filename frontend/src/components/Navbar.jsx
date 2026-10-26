@@ -26,6 +26,11 @@ function Navbar() {
     useNavigate();
 
 
+  const isAdmin =
+    userInfo?.user?.role ===
+    'ADMIN';
+
+
   const handleLogout =
     () => {
 
@@ -36,125 +41,200 @@ function Navbar() {
     };
 
 
-  const isAdmin =
-    userInfo?.user?.role ===
-    'ADMIN';
+  const getNavClass =
+    ({ isActive }) =>
+      isActive
+        ? 'main-nav-link active'
+        : 'main-nav-link';
 
 
   return (
 
-    <nav className="navbar">
+    <header className="cyber-header">
 
-      <NavLink
-        to="/"
-        className="logo"
-      >
-        CyberArena
-      </NavLink>
+      <nav className="cyber-navbar">
 
+        {/* =========================
+            CYBERARENA LOGO
+            ========================= */}
 
-      <div className="nav-links">
+        <div className="cyber-navbar-brand">
 
-        <NavLink to="/">
-          Home
-        </NavLink>
+          <NavLink
+            to="/"
+            className="cyber-logo"
+          >
 
+            CyberArena
 
-        <NavLink to="/tournaments">
-          Tournaments
-        </NavLink>
+          </NavLink>
 
-
-        <NavLink to="/my-tickets">
-          My Tickets
-        </NavLink>
+        </div>
 
 
-        <NavLink to="/leaderboard">
-          Leaderboard
-        </NavLink>
+        {/* =========================
+            MAIN NAVIGATION
+            ========================= */}
+
+        <div className="cyber-nav-links">
+
+          <NavLink
+            to="/"
+            end
+            className={
+              getNavClass
+            }
+          >
+            Home
+          </NavLink>
 
 
-        <NavLink to="/support">
-          Support
-        </NavLink>
+          <NavLink
+            to="/tournaments"
+            className={
+              getNavClass
+            }
+          >
+            Tournaments
+          </NavLink>
 
 
-        {
-  isAdmin && (
-
-    <>
-
-      <NavLink
-        to="/admin"
-        className="admin-nav-link"
-      >
-        Admin
-      </NavLink>
+          <NavLink
+            to="/my-tickets"
+            className={
+              getNavClass
+            }
+          >
+            My Tickets
+          </NavLink>
 
 
-      <NavLink
-        to="/admin/support"
-        className="admin-nav-link"
-      >
-        Inbox
-      </NavLink>
-
-    </>
-
-  )
-}
+          <NavLink
+            to="/leaderboard"
+            className={
+              getNavClass
+            }
+          >
+            Leaderboard
+          </NavLink>
 
 
-        {
-          userInfo ? (
-
-            <div className="user-area">
-
-              <NavLink
-                to="/profile"
-                className="profile-link"
-              >
-                Profile
-              </NavLink>
+          <NavLink
+            to="/support"
+            className={
+              getNavClass
+            }
+          >
+            Support
+          </NavLink>
 
 
-              <span className="player-id">
+          {
+            isAdmin && (
 
-                {
-                  userInfo.user
-                    ?.playerId
-                }
+              <>
 
-              </span>
+                <NavLink
+                  to="/admin"
+                  className={
+                    ({ isActive }) =>
+                      isActive
+                        ? 'main-nav-link admin-link active'
+                        : 'main-nav-link admin-link'
+                  }
+                >
+                  Admin
+                </NavLink>
 
 
-              <button
-                className="logout-button"
-                onClick={
-                  handleLogout
-                }
-              >
-                Logout
-              </button>
+                <NavLink
+                  to="/admin/support"
+                  className={
+                    ({ isActive }) =>
+                      isActive
+                        ? 'main-nav-link admin-link active'
+                        : 'main-nav-link admin-link'
+                  }
+                >
+                  Inbox
+                </NavLink>
 
-            </div>
+              </>
 
-          ) : (
+            )
+          }
 
-            <NavLink
-              to="/login"
-              className="login-button"
-            >
-              Login
-            </NavLink>
+        </div>
 
-          )
-        }
 
-      </div>
+        {/* =========================
+            USER AREA
+            ========================= */}
 
-    </nav>
+        <div className="cyber-user-area">
+
+          {
+            userInfo
+
+              ? (
+
+                <>
+
+                  <NavLink
+                    to="/profile"
+                    className="cyber-profile-link"
+                  >
+
+                    Profile
+
+                  </NavLink>
+
+
+                  <span className="cyber-player-id">
+
+                    {
+                      userInfo.user?.playerId ||
+                      'PLAYER'
+                    }
+
+                  </span>
+
+
+                  <button
+                    type="button"
+                    className="cyber-logout-button"
+                    onClick={
+                      handleLogout
+                    }
+                  >
+
+                    Logout
+
+                  </button>
+
+                </>
+
+              )
+
+              : (
+
+                <NavLink
+                  to="/login"
+                  className="cyber-login-button"
+                >
+
+                  Login
+
+                </NavLink>
+
+              )
+          }
+
+        </div>
+
+      </nav>
+
+    </header>
 
   );
 

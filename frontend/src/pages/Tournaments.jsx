@@ -9,12 +9,61 @@ import {
   useNavigate
 } from 'react-router-dom';
 
-import api
-  from '../api/axios';
+import api from '../api/axios';
 
 import {
   AuthContext
 } from '../context/AuthContext';
+
+
+// =====================================================
+// GET CORRECT IMAGE FOR EACH GAME
+// =====================================================
+
+const getTournamentImage = (gameName) => {
+
+  const game =
+    gameName
+      ?.trim()
+      .toLowerCase() || '';
+
+
+  // VALORANT
+  if (
+    game.includes('valorant')
+  ) {
+
+    return '/tournament-images/valorant.jpg';
+
+  }
+
+
+  // COUNTER STRIKE 2
+  if (
+    game.includes('counter strike') ||
+    game.includes('counter-strike') ||
+    game.includes('cs2')
+  ) {
+
+    return '/tournament-images/counter-strike-2.png';
+
+  }
+
+
+  // LEAGUE OF LEGENDS
+  if (
+    game.includes('league of legends') ||
+    game === 'lol'
+  ) {
+
+    return '/tournament-images/league-of-legends.jpg';
+
+  }
+
+
+  return null;
+
+};
 
 
 function Tournaments() {
@@ -30,27 +79,51 @@ function Tournaments() {
   );
 
 
-  const [tournaments, setTournaments] =
-    useState([]);
+  const [
+    tournaments,
+    setTournaments
+  ] = useState([]);
 
-  const [loading, setLoading] =
-    useState(true);
 
-  const [error, setError] =
-    useState('');
+  const [
+    loading,
+    setLoading
+  ] = useState(true);
 
-  const [success, setSuccess] =
-    useState('');
 
-  const [reservingId, setReservingId] =
-    useState(null);
+  const [
+    error,
+    setError
+  ] = useState('');
 
-  const [searchTerm, setSearchTerm] =
-    useState('');
 
-  const [gameFilter, setGameFilter] =
-    useState('ALL');
+  const [
+    success,
+    setSuccess
+  ] = useState('');
 
+
+  const [
+    reservingId,
+    setReservingId
+  ] = useState(null);
+
+
+  const [
+    searchTerm,
+    setSearchTerm
+  ] = useState('');
+
+
+  const [
+    gameFilter,
+    setGameFilter
+  ] = useState('ALL');
+
+
+  // =====================================================
+  // LOAD TOURNAMENTS
+  // =====================================================
 
   const fetchTournaments =
     async () => {
@@ -58,6 +131,7 @@ function Tournaments() {
       try {
 
         setLoading(true);
+
         setError('');
 
 
@@ -74,6 +148,12 @@ function Tournaments() {
 
 
       } catch (error) {
+
+        console.error(
+          'Tournament loading error:',
+          error
+        );
+
 
         setError(
           error.response?.data?.message ||
@@ -97,6 +177,10 @@ function Tournaments() {
   }, []);
 
 
+  // =====================================================
+  // GAME FILTER OPTIONS
+  // =====================================================
+
   const games =
     useMemo(() => {
 
@@ -116,6 +200,10 @@ function Tournaments() {
     }, [tournaments]);
 
 
+  // =====================================================
+  // SEARCH + FILTER
+  // =====================================================
+
   const filteredTournaments =
     useMemo(() => {
 
@@ -128,23 +216,35 @@ function Tournaments() {
       return tournaments.filter(
         (tournament) => {
 
+          const title =
+            tournament.title
+              ?.toLowerCase() ||
+            '';
+
+
+          const game =
+            tournament.game
+              ?.toLowerCase() ||
+            '';
+
+
+          const description =
+            tournament.description
+              ?.toLowerCase() ||
+            '';
+
+
           const matchesSearch =
 
-            tournament.title
-              ?.toLowerCase()
-              .includes(search)
+            title.includes(search)
 
             ||
 
-            tournament.game
-              ?.toLowerCase()
-              .includes(search)
+            game.includes(search)
 
             ||
 
-            tournament.description
-              ?.toLowerCase()
-              .includes(search);
+            description.includes(search);
 
 
           const matchesGame =
@@ -172,17 +272,28 @@ function Tournaments() {
     ]);
 
 
+  // =====================================================
+  // CLEAR FILTERS
+  // =====================================================
+
   const clearFilters =
     () => {
 
       setSearchTerm('');
+
       setGameFilter('ALL');
 
     };
 
 
+  // =====================================================
+  // RESERVE TICKET
+  // =====================================================
+
   const handleReserve =
-    async (tournamentId) => {
+    async (
+      tournamentId
+    ) => {
 
       if (!userInfo) {
 
@@ -200,6 +311,7 @@ function Tournaments() {
         );
 
         setError('');
+
         setSuccess('');
 
 
@@ -216,8 +328,8 @@ function Tournaments() {
 
 
         setTournaments(
-          (current) =>
-            current.map(
+          (currentTournaments) =>
+            currentTournaments.map(
               (tournament) => {
 
                 if (
@@ -226,6 +338,7 @@ function Tournaments() {
                 ) {
 
                   return {
+
                     ...tournament,
 
                     availableSeats:
@@ -233,9 +346,11 @@ function Tournaments() {
                         0,
                         tournament.availableSeats - 1
                       )
+
                   };
 
                 }
+
 
                 return tournament;
 
@@ -245,6 +360,12 @@ function Tournaments() {
 
 
       } catch (error) {
+
+        console.error(
+          'Reservation error:',
+          error
+        );
+
 
         setError(
           error.response?.data?.message ||
@@ -276,10 +397,15 @@ function Tournaments() {
 
 
       <p className="page-description">
-        Discover upcoming CyberArena tournaments
-        and reserve your place.
+
+        Discover upcoming CyberArena
+        tournaments and reserve your
+        place in the competition.
+
       </p>
 
+
+      {/* SEARCH + FILTER */}
 
       <div className="tournament-filter-panel">
 
@@ -288,6 +414,7 @@ function Tournaments() {
           <label>
             SEARCH
           </label>
+
 
           <input
             type="text"
@@ -310,6 +437,7 @@ function Tournaments() {
             GAME
           </label>
 
+
           <select
             value={gameFilter}
             onChange={
@@ -324,6 +452,7 @@ function Tournaments() {
               ALL GAMES
             </option>
 
+
             {
               games.map(
                 (game) => (
@@ -332,7 +461,9 @@ function Tournaments() {
                     value={game}
                     key={game}
                   >
+
                     {game}
+
                   </option>
 
                 )
@@ -345,10 +476,13 @@ function Tournaments() {
 
 
         <button
+          type="button"
           className="clear-filter-button"
           onClick={clearFilters}
         >
+
           CLEAR
+
         </button>
 
       </div>
@@ -381,27 +515,33 @@ function Tournaments() {
 
       {
         error && (
+
           <p className="error-message">
             {error}
           </p>
+
         )
       }
 
 
       {
         success && (
+
           <p className="success-message">
             {success}
           </p>
+
         )
       }
 
 
       {
         loading && (
+
           <p className="loading-message">
             Loading tournaments...
           </p>
+
         )
       }
 
@@ -410,17 +550,9 @@ function Tournaments() {
         !loading &&
         filteredTournaments.length === 0 && (
 
-          <div className="filter-empty-state">
-
-            <p>
-              No tournaments match your search.
-            </p>
-
-            <button onClick={clearFilters}>
-              CLEAR FILTERS
-            </button>
-
-          </div>
+          <p className="empty-message">
+            No tournaments found.
+          </p>
 
         )
       }
@@ -434,89 +566,172 @@ function Tournaments() {
 
             {
               filteredTournaments.map(
-                (tournament) => (
+                (tournament) => {
 
-                  <div
-                    className="tournament-card"
-                    key={tournament._id}
-                  >
-
-                    <p className="game-name">
-                      {tournament.game}
-                    </p>
+                  const image =
+                    getTournamentImage(
+                      tournament.game
+                    );
 
 
-                    <h2>
-                      {tournament.title}
-                    </h2>
+                  return (
 
-
-                    <p className="tournament-description">
-                      {tournament.description}
-                    </p>
-
-
-                    <div className="tournament-info">
-
-                      <p>
-                        <strong>DATE:</strong>{' '}
-                        {
-                          new Date(
-                            tournament.date
-                          ).toLocaleDateString()
-                        }
-                      </p>
-
-
-                      <p>
-                        <strong>PRICE:</strong>{' '}
-                        LKR {tournament.price}
-                      </p>
-
-
-                      <p>
-                        <strong>AVAILABLE:</strong>{' '}
-                        {tournament.availableSeats}
-                        {' / '}
-                        {tournament.totalSeats}
-                      </p>
-
-                    </div>
-
-
-                    <button
-                      className="reserve-button"
-                      disabled={
-                        reservingId ===
-                          tournament._id
-                        ||
-                        tournament.availableSeats <= 0
-                      }
-                      onClick={
-                        () =>
-                          handleReserve(
-                            tournament._id
-                          )
+                    <div
+                      className="tournament-card"
+                      key={
+                        tournament._id
                       }
                     >
 
+                      {/* =========================
+                          TOURNAMENT IMAGE
+                          ========================= */}
+
                       {
-                        tournament.availableSeats <= 0
+                        image && (
 
-                          ? 'SOLD OUT'
+                          <div className="tournament-image-wrapper">
 
-                          : reservingId === tournament._id
+                            <img
+                              src={image}
+                              alt={
+                                tournament.game
+                              }
+                              className="tournament-image"
+                            />
 
-                            ? 'RESERVING...'
+                          </div>
 
-                            : 'RESERVE TICKET'
+                        )
                       }
 
-                    </button>
 
-                  </div>
+                      {/* =========================
+                          CARD CONTENT
+                          ========================= */}
 
-                )
+                      <div className="tournament-card-content">
+
+                        <p className="game-name">
+
+                          {
+                            tournament.game
+                          }
+
+                        </p>
+
+
+                        <h2>
+
+                          {
+                            tournament.title
+                          }
+
+                        </h2>
+
+
+                        <p className="tournament-description">
+
+                          {
+                            tournament.description
+                          }
+
+                        </p>
+
+
+                        <div className="tournament-info">
+
+                          <p>
+
+                            <strong>
+                              DATE:
+                            </strong>{' '}
+
+                            {
+                              new Date(
+                                tournament.date
+                              ).toLocaleDateString()
+                            }
+
+                          </p>
+
+
+                          <p>
+
+                            <strong>
+                              PRICE:
+                            </strong>{' '}
+
+                            LKR{' '}
+
+                            {
+                              tournament.price
+                            }
+
+                          </p>
+
+
+                          <p>
+
+                            <strong>
+                              AVAILABLE:
+                            </strong>{' '}
+
+                            {
+                              tournament.availableSeats
+                            }
+
+                            {' / '}
+
+                            {
+                              tournament.totalSeats
+                            }
+
+                          </p>
+
+                        </div>
+
+
+                        <button
+                          className="reserve-button"
+                          disabled={
+                            reservingId ===
+                              tournament._id
+
+                            ||
+
+                            tournament.availableSeats <= 0
+                          }
+                          onClick={
+                            () =>
+                              handleReserve(
+                                tournament._id
+                              )
+                          }
+                        >
+
+                          {
+                            tournament.availableSeats <= 0
+
+                              ? 'SOLD OUT'
+
+                              : reservingId ===
+                                tournament._id
+
+                                ? 'RESERVING...'
+
+                                : 'RESERVE TICKET'
+                          }
+
+                        </button>
+
+                      </div>
+
+                    </div>
+
+                  );
+
+                }
               )
             }
 

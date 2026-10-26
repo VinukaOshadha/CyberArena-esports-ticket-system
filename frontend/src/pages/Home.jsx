@@ -1,58 +1,204 @@
-import { Link } from 'react-router-dom';
+import {
+  Link
+} from 'react-router-dom';
 
-import FeatureCard from '../components/FeatureCard';
 
 function Home() {
+
   return (
-    <div className="home">
 
-      <section className="hero">
+    <main className="cyber-home">
 
-        <p className="small-title">
-          CYBERARENA NETWORK
-        </p>
+      {/* =========================
+          BACKGROUND IMAGE
+          ========================= */}
 
-        <h1>
-          WELCOME PLAYER
-        </h1>
+      <div className="cyber-home-background" />
 
-        <p className="hero-description">
-          Enter the competitive gaming network.
-          Discover eSports tournaments, reserve
-          tickets and follow player rankings.
-        </p>
-
-        <Link
-          to="/tournaments"
-          className="main-button"
-        >
-          EXPLORE TOURNAMENTS
-        </Link>
-
-      </section>
+      <div className="cyber-home-overlay" />
 
 
-      <section className="features">
+      {/* =========================
+          HOME CONTENT
+          ========================= */}
 
-        <FeatureCard
-          title="TOURNAMENTS"
-          description="Discover upcoming competitive gaming events."
-        />
+      <div className="cyber-home-content">
 
-        <FeatureCard
-          title="TICKETS"
-          description="Reserve and manage your tournament tickets."
-        />
+        {/* HERO */}
 
-        <FeatureCard
-          title="LEADERBOARD"
-          description="Follow rankings of competitive players."
-        />
+        <section className="cyber-hero">
 
-      </section>
+          <p className="cyber-hero-tag">
 
-    </div>
+            ENTER THE ARENA
+
+          </p>
+
+
+          <h1>
+
+            PLAY.
+
+            <br />
+
+            COMPETE.
+
+            <br />
+
+            <span>
+              DOMINATE.
+            </span>
+
+          </h1>
+
+
+          <p className="cyber-hero-description">
+
+            Discover competitive
+            eSports tournaments,
+            reserve your tickets,
+            track your events and
+            enter the CyberArena.
+
+          </p>
+
+
+          <div className="cyber-hero-actions">
+
+            <Link
+              to="/tournaments"
+              className="cyber-primary-button"
+            >
+
+              EXPLORE TOURNAMENTS
+
+            </Link>
+
+
+            <Link
+              to="/leaderboard"
+              className="cyber-secondary-button"
+            >
+
+              VIEW LEADERBOARD
+
+            </Link>
+
+          </div>
+
+        </section>
+
+
+        {/* =========================
+            FEATURE CARDS
+            ========================= */}
+
+        <section className="cyber-home-features">
+
+          <div className="cyber-home-feature-card">
+
+            <p className="feature-number">
+              01
+            </p>
+
+
+            <h2>
+              TOURNAMENTS
+            </h2>
+
+
+            <p>
+
+              Discover competitive
+              Valorant, Counter-Strike 2
+              and League of Legends
+              tournaments.
+
+            </p>
+
+
+            <Link
+              to="/tournaments"
+              className="feature-link"
+            >
+              EXPLORE →
+            </Link>
+
+          </div>
+
+
+          <div className="cyber-home-feature-card">
+
+            <p className="feature-number">
+              02
+            </p>
+
+
+            <h2>
+              MY TICKETS
+            </h2>
+
+
+            <p>
+
+              Reserve tournament
+              tickets and manage
+              your active and
+              cancelled reservations.
+
+            </p>
+
+
+            <Link
+              to="/my-tickets"
+              className="feature-link"
+            >
+              VIEW TICKETS →
+            </Link>
+
+          </div>
+
+
+          <div className="cyber-home-feature-card">
+
+            <p className="feature-number">
+              03
+            </p>
+
+
+            <h2>
+              LEADERBOARD
+            </h2>
+
+
+            <p>
+
+              Follow CyberArena
+              rankings, player
+              points and tournament
+              victories.
+
+            </p>
+
+
+            <Link
+              to="/leaderboard"
+              className="feature-link"
+            >
+              VIEW RANKINGS →
+            </Link>
+
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+
   );
+
 }
+
 
 export default Home;
