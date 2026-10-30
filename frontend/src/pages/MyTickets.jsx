@@ -1,478 +1,399 @@
 import {
   useEffect,
-  useMemo,
-  useState
+  useState,
 } from 'react';
 
-import api
-  from '../api/axios';
+import api from '../api/axios';
 
 
 function MyTickets() {
-
-  const [tickets, setTickets] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [error, setError] =
-    useState('');
-
-  const [success, setSuccess] =
-    useState('');
-
-  const [cancellingId, setCancellingId] =
-    useState(null);
-
-  const [statusFilter, setStatusFilter] =
-    useState('ALL');
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [cancellingId, setCancellingId] = useState(null);
 
 
-  const fetchTickets =
-    async () => {
+  // =========================================================
+  // LOAD USER TICKETS
+  // =========================================================
 
-      try {
+  const fetchTickets = async () => {
+    try {
+      setLoading(true);
+      setError('');
 
-        setLoading(true);
-        setError('');
+      const { data } = await api.get('/tickets/my');
+
+      // Hide tickets that were already cancelled
+      // before this page was opened/refreshed.
+      const activeTickets = data.filter((ticket) => {
+        const status = String(
+          ticket.status || ''
+        ).toUpperCase();
+
+        return status !== 'CANCELLED';
+      });
+
+      setTickets(activeTickets);
+
+    } catch (err) {
+      console.error(
+        'MY TICKETS ERROR:',
+        err.response?.data || err.message
+      );
+
+      setError(
+        err.response?.data?.message ||
+        'Could not load your tickets.'
+      );
+
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
-        const response =
-          await api.get(
-            '/tickets/my'
-          );
-
-
-        setTickets(
-          response.data.tickets ||
-          []
-        );
-
-
-      } catch (error) {
-
-        setError(
-          error.response?.data?.message ||
-          'Unable to load your tickets.'
-        );
-
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
-    };
-
+  // =========================================================
+  // LOAD WHEN PAGE OPENS
+  // =========================================================
 
   useEffect(() => {
-
     fetchTickets();
-
   }, []);
 
 
-  const reservedCount =
-    tickets.filter(
-      (ticket) =>
-        ticket.status ===
-        'RESERVED'
-    ).length;
+  // =========================================================
+  // CANCEL TICKET
+  // =========================================================
 
+  const handleCancel = async (ticketId) => {
+    const confirmed = window.confirm(
+      'Are you sure you want to cancel this ticket?'
+    );
 
-  const cancelledCount =
-    tickets.filter(
-      (ticket) =>
-        ticket.status ===
-        'CANCELLED'
-    ).length;
+    if (!confirmed) {
+      return;
+    }
 
+    try {
+      setCancellingId(ticketId);
+      setError('');
+      setSuccess('');
 
-  const filteredTickets =
-    useMemo(() => {
-
-      if (
-        statusFilter === 'ALL'
-      ) {
-
-        return tickets;
-
-      }
-
-
-      return tickets.filter(
-        (ticket) =>
-          ticket.status ===
-          statusFilter
+      const response = await api.patch(
+        `/tickets/cancel/${ticketId}`
       );
 
-    }, [
-      tickets,
-      statusFilter
-    ]);
+
+      // =====================================================
+      // STEP 1:
+      // Show CANCELLED status immediately
+      // =====================================================
+
+      setTickets((currentTickets) =>
+        currentTickets.map((ticket) => {
+          if (ticket._id === ticketId) {
+            return {
+              ...ticket,
+              status: 'CANCELLED',
+            };
+          }
+
+          return ticket;
+        })
+      );
 
 
-  const handleCancel =
-    async (ticketId) => {
+      setSuccess(
+        response.data.message ||
+        'Ticket cancelled successfully.'
+      );
 
-      const confirmed =
-        window.confirm(
-          'Are you sure you want to cancel this ticket?'
+
+      // =====================================================
+      // Tell Tournaments page seat data has changed
+      // =====================================================
+
+      window.dispatchEvent(
+        new Event('cyberarena-tickets-changed')
+      );
+
+
+      // =====================================================
+      // STEP 2:
+      // Remove cancelled card after 1.5 seconds
+      // =====================================================
+
+      setTimeout(() => {
+        setTickets((currentTickets) =>
+          currentTickets.filter(
+            (ticket) => ticket._id !== ticketId
+          )
         );
+      }, 1500);
 
 
-      if (!confirmed) {
-        return;
-      }
+    } catch (err) {
+      console.error(
+        'CANCEL TICKET ERROR:',
+        err.response?.data || err.message
+      );
+
+      setError(
+        err.response?.data?.message ||
+        'Unable to cancel ticket.'
+      );
+
+    } finally {
+      setCancellingId(null);
+    }
+  };
 
 
-      try {
+  // =========================================================
+  // ACTIVE TICKET COUNT
+  // =========================================================
 
-        setCancellingId(ticketId);
-
-        setError('');
-        setSuccess('');
-
-
-        const response =
-          await api.patch(
-            `/tickets/cancel/${ticketId}`
-          );
+  const activeTicketCount = tickets.filter(
+    (ticket) =>
+      String(
+        ticket.status || ''
+      ).toUpperCase() !== 'CANCELLED'
+  ).length;
 
 
-        setTickets(
-          (current) =>
-            current.map(
-              (ticket) => {
-
-                if (
-                  ticket._id ===
-                  ticketId
-                ) {
-
-                  return {
-                    ...ticket,
-                    status: 'CANCELLED'
-                  };
-
-                }
-
-
-                return ticket;
-
-              }
-            )
-        );
-
-
-        setSuccess(
-          response.data.message ||
-          'Ticket cancelled successfully.'
-        );
-
-
-      } catch (error) {
-
-        setError(
-          error.response?.data?.message ||
-          'Unable to cancel ticket.'
-        );
-
-
-      } finally {
-
-        setCancellingId(null);
-
-      }
-
-    };
-
+  // =========================================================
+  // PAGE
+  // =========================================================
 
   return (
-
     <div className="tickets-page">
+
+      {/* PAGE HEADER */}
 
       <p className="small-title">
         PLAYER RESERVATIONS
       </p>
 
-
       <h1>
         MY TICKETS
       </h1>
 
-
       <p className="page-description">
-        Review your tournament reservations
-        and ticket history.
+        Review and manage your active tournament reservations.
       </p>
 
+
+      {/* =====================================================
+          SUMMARY CARDS
+          ===================================================== */}
 
       <div className="ticket-summary-grid">
 
         <div className="ticket-summary-card">
-
-          <span>TOTAL</span>
+          <span>
+            ACTIVE TICKETS
+          </span>
 
           <strong>
-            {tickets.length}
+            {activeTicketCount}
           </strong>
-
         </div>
 
 
         <div className="ticket-summary-card">
-
-          <span>RESERVED</span>
+          <span>
+            MAX PER TOURNAMENT
+          </span>
 
           <strong>
-            {reservedCount}
+            3
           </strong>
-
         </div>
 
 
         <div className="ticket-summary-card">
-
-          <span>CANCELLED</span>
+          <span>
+            STATUS
+          </span>
 
           <strong>
-            {cancelledCount}
+            RESERVED
           </strong>
-
         </div>
 
       </div>
 
 
-      <div className="ticket-filter-buttons">
+      {/* =====================================================
+          ERROR MESSAGE
+          ===================================================== */}
 
-        <button
-          className={
-            statusFilter === 'ALL'
-              ? 'active'
-              : ''
-          }
-          onClick={
-            () =>
-              setStatusFilter('ALL')
-          }
-        >
-          ALL
-        </button>
+      {error && (
+        <p className="error-message">
+          {error}
+        </p>
+      )}
 
 
-        <button
-          className={
-            statusFilter === 'RESERVED'
-              ? 'active'
-              : ''
-          }
-          onClick={
-            () =>
-              setStatusFilter(
-                'RESERVED'
-              )
-          }
-        >
-          RESERVED
-        </button>
+      {/* =====================================================
+          SUCCESS MESSAGE
+          ===================================================== */}
+
+      {success && (
+        <p className="success-message">
+          {success}
+        </p>
+      )}
 
 
-        <button
-          className={
-            statusFilter === 'CANCELLED'
-              ? 'active'
-              : ''
-          }
-          onClick={
-            () =>
-              setStatusFilter(
-                'CANCELLED'
-              )
-          }
-        >
-          CANCELLED
-        </button>
+      {/* =====================================================
+          LOADING
+          ===================================================== */}
 
-      </div>
+      {loading && (
+        <p className="loading-message">
+          Loading your tickets...
+        </p>
+      )}
 
 
-      {
-        error && (
-          <p className="error-message">
-            {error}
-          </p>
-        )
-      }
+      {/* =====================================================
+          EMPTY STATE
+          ===================================================== */}
 
-
-      {
-        success && (
-          <p className="success-message">
-            {success}
-          </p>
-        )
-      }
-
-
-      {
-        loading && (
-          <p className="loading-message">
-            Loading your tickets...
-          </p>
-        )
-      }
-
-
-      {
-        !loading &&
-        filteredTickets.length === 0 && (
-
+      {!loading &&
+        !error &&
+        tickets.length === 0 && (
           <p className="empty-message">
-            No tickets found for this filter.
+            You currently have no active tickets.
           </p>
-
-        )
-      }
+        )}
 
 
-      {
-        !loading &&
-        filteredTickets.length > 0 && (
+      {/* =====================================================
+          TICKET CARDS
+          ===================================================== */}
 
+      {!loading &&
+        tickets.length > 0 && (
           <div className="tickets-list">
 
-            {
-              filteredTickets.map(
-                (ticket) => {
+            {tickets.map((ticket) => {
+              const tournament =
+                ticket.tournament;
 
-                  const tournament =
-                    ticket.tournament;
+              const status =
+                String(
+                  ticket.status || 'RESERVED'
+                ).toUpperCase();
 
-
-                  return (
-
-                    <div
-                      className="ticket-card"
-                      key={ticket._id}
-                    >
-
-                      <p className="small-title">
-
-                        {
-                          tournament?.game ||
-                          'CYBERARENA EVENT'
-                        }
-
-                      </p>
+              const isCancelled =
+                status === 'CANCELLED';
 
 
-                      <h2>
+              return (
+                <div
+                  className="ticket-card"
+                  key={ticket._id}
+                >
 
-                        {
-                          tournament?.title ||
-                          'Tournament'
-                        }
+                  {/* GAME */}
 
-                      </h2>
-
-
-                      <p>
-                        <strong>
-                          TICKET CODE:
-                        </strong>{' '}
-                        {ticket.ticketCode}
-                      </p>
+                  <p className="small-title">
+                    {tournament?.game ||
+                      'CYBERARENA EVENT'}
+                  </p>
 
 
-                      <p>
+                  {/* TOURNAMENT TITLE */}
 
-                        <strong>
-                          DATE:
-                        </strong>{' '}
-
-                        {
-                          tournament?.date
-
-                            ? new Date(
-                                tournament.date
-                              ).toLocaleDateString()
-
-                            : 'N/A'
-                        }
-
-                      </p>
+                  <h2>
+                    {tournament?.title ||
+                      'Tournament'}
+                  </h2>
 
 
-                      <p>
-                        <strong>
-                          PRICE:
-                        </strong>{' '}
-                        LKR {ticket.price}
-                      </p>
+                  {/* TICKET CODE */}
+
+                  <p>
+                    <strong>
+                      TICKET CODE:
+                    </strong>{' '}
+
+                    {ticket.ticketCode}
+                  </p>
 
 
-                      <p
-                        className={
-                          ticket.status ===
-                          'CANCELLED'
+                  {/* DATE */}
 
-                            ? 'ticket-status cancelled'
+                  <p>
+                    <strong>
+                      DATE:
+                    </strong>{' '}
 
-                            : 'ticket-status'
-                        }
-                      >
-                        {ticket.status}
-                      </p>
+                    {tournament?.date
+                      ? new Date(
+                          tournament.date
+                        ).toLocaleDateString()
+                      : 'N/A'}
+                  </p>
 
 
-                      {
-                        ticket.status === 'RESERVED'
-                        &&
+                  {/* PRICE */}
 
-                        <button
-                          className="cancel-ticket-button"
-                          disabled={
-                            cancellingId ===
-                            ticket._id
-                          }
-                          onClick={
-                            () =>
-                              handleCancel(
-                                ticket._id
-                              )
-                          }
-                        >
+                  <p>
+                    <strong>
+                      PRICE:
+                    </strong>{' '}
 
-                          {
-                            cancellingId === ticket._id
-                              ? 'CANCELLING...'
-                              : 'CANCEL TICKET'
-                          }
+                    LKR {ticket.price}
+                  </p>
 
-                        </button>
+
+                  {/* STATUS */}
+
+                  <p
+                    className={
+                      isCancelled
+                        ? 'ticket-status cancelled'
+                        : 'ticket-status'
+                    }
+                  >
+                    {isCancelled
+                      ? 'CANCELLED'
+                      : 'RESERVED'}
+                  </p>
+
+
+                  {/* CANCEL BUTTON */}
+
+                  {!isCancelled && (
+                    <button
+                      className="cancel-ticket-button"
+                      disabled={
+                        cancellingId === ticket._id
                       }
+                      onClick={() =>
+                        handleCancel(ticket._id)
+                      }
+                    >
+                      {cancellingId === ticket._id
+                        ? 'CANCELLING...'
+                        : 'CANCEL TICKET'}
+                    </button>
+                  )}
 
-                    </div>
-
-                  );
-
-                }
-              )
-            }
+                </div>
+              );
+            })}
 
           </div>
-
-        )
-      }
+        )}
 
     </div>
-
   );
-
 }
 
 

@@ -2,17 +2,17 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState
+  useState,
 } from 'react';
 
 import {
-  useNavigate
+  useNavigate,
 } from 'react-router-dom';
 
 import api from '../api/axios';
 
 import {
-  AuthContext
+  AuthContext,
 } from '../context/AuthContext';
 
 
@@ -21,20 +21,15 @@ import {
 // =====================================================
 
 const getTournamentImage = (gameName) => {
-
   const game =
-    gameName
-      ?.trim()
-      .toLowerCase() || '';
+    gameName?.trim().toLowerCase() || '';
 
 
   // VALORANT
   if (
     game.includes('valorant')
   ) {
-
     return '/tournament-images/valorant.jpg';
-
   }
 
 
@@ -44,9 +39,7 @@ const getTournamentImage = (gameName) => {
     game.includes('counter-strike') ||
     game.includes('cs2')
   ) {
-
     return '/tournament-images/counter-strike-2.png';
-
   }
 
 
@@ -55,69 +48,77 @@ const getTournamentImage = (gameName) => {
     game.includes('league of legends') ||
     game === 'lol'
   ) {
-
     return '/tournament-images/league-of-legends.jpg';
-
   }
 
 
   return null;
-
 };
 
 
+// =====================================================
+// TOURNAMENT PAGE
+// =====================================================
+
 function Tournaments() {
-
-  const navigate =
-    useNavigate();
-
+  const navigate = useNavigate();
 
   const {
-    userInfo
+    userInfo,
   } = useContext(
     AuthContext
   );
 
 
+  // =====================================================
+  // STATES
+  // =====================================================
+
   const [
     tournaments,
-    setTournaments
+    setTournaments,
+  ] = useState([]);
+
+
+  const [
+    myTickets,
+    setMyTickets,
   ] = useState([]);
 
 
   const [
     loading,
-    setLoading
+    setLoading,
   ] = useState(true);
 
 
   const [
     error,
-    setError
+    setError,
   ] = useState('');
 
 
   const [
     success,
-    setSuccess
+    setSuccess,
   ] = useState('');
 
 
   const [
     reservingId,
-    setReservingId
+    setReservingId,
   ] = useState(null);
 
 
   const [
     searchTerm,
-    setSearchTerm
+    setSearchTerm,
   ] = useState('');
 
 
   const [
     gameFilter,
-    setGameFilter
+    setGameFilter,
   ] = useState('ALL');
 
 
@@ -126,11 +127,12 @@ function Tournaments() {
   // =====================================================
 
   const fetchTournaments =
-    async () => {
+    async (showLoading = true) => {
 
       try {
-
-        setLoading(true);
+        if (showLoading) {
+          setLoading(true);
+        }
 
         setError('');
 
@@ -141,40 +143,209 @@ function Tournaments() {
           );
 
 
+        /*
+          Supports both:
+
+          [
+            tournament,
+            tournament
+          ]
+
+          AND
+
+          {
+            tournaments: [...]
+          }
+        */
+
+        const tournamentData =
+          Array.isArray(
+            response.data
+          )
+            ? response.data
+            : response.data.tournaments ||
+              [];
+
+
         setTournaments(
-          response.data.tournaments ||
-          []
+          tournamentData
         );
 
-
-      } catch (error) {
-
+      } catch (err) {
         console.error(
-          'Tournament loading error:',
-          error
+          'TOURNAMENT LOADING ERROR:',
+          err.response?.data ||
+          err.message
         );
 
 
         setError(
-          error.response?.data?.message ||
+          err.response?.data?.message ||
           'Unable to load tournaments.'
         );
 
-
       } finally {
-
-        setLoading(false);
-
+        if (showLoading) {
+          setLoading(false);
+        }
       }
-
     };
 
 
+  // =====================================================
+  // LOAD LOGGED-IN USER'S TICKETS
+  // =====================================================
+
+  const fetchMyTickets =
+    async () => {
+
+      if (!userInfo?.token) {
+        setMyTickets([]);
+        return;
+      }
+
+
+      try {
+        const response =
+          await api.get(
+            '/tickets/my'
+          );
+
+
+        const ticketData =
+          Array.isArray(
+            response.data
+          )
+            ? response.data
+            : response.data.tickets ||
+              [];
+
+
+        setMyTickets(
+          ticketData
+        );
+
+      } catch (err) {
+        console.error(
+          'MY TICKETS LOADING ERROR:',
+          err.response?.data ||
+          err.message
+        );
+
+        setMyTickets([]);
+      }
+    };
+
+
+  // =====================================================
+  // INITIAL LOAD + REFRESH AFTER TICKET CHANGES
+  // =====================================================
+
   useEffect(() => {
+    const loadPageData =
+      async () => {
 
-    fetchTournaments();
+        await Promise.all([
+          fetchTournaments(true),
+          fetchMyTickets(),
+        ]);
 
-  }, []);
+      };
+
+
+    loadPageData();
+
+
+    // Called from MyTickets.jsx after cancellation
+    const handleTicketChange =
+      async () => {
+
+        await Promise.all([
+          fetchTournaments(false),
+          fetchMyTickets(),
+        ]);
+
+      };
+
+
+    // Refresh when browser window becomes active again
+    const handleWindowFocus =
+      async () => {
+
+        await Promise.all([
+          fetchTournaments(false),
+          fetchMyTickets(),
+        ]);
+
+      };
+
+
+    window.addEventListener(
+      'cyberarena-tickets-changed',
+      handleTicketChange
+    );
+
+
+    window.addEventListener(
+      'focus',
+      handleWindowFocus
+    );
+
+
+    return () => {
+      window.removeEventListener(
+        'cyberarena-tickets-changed',
+        handleTicketChange
+      );
+
+
+      window.removeEventListener(
+        'focus',
+        handleWindowFocus
+      );
+    };
+
+  }, [
+    userInfo?.token,
+  ]);
+
+
+  // =====================================================
+  // COUNT ACTIVE TICKETS FOR ONE TOURNAMENT
+  // =====================================================
+
+  const getReservedTicketCount =
+    (tournamentId) => {
+
+      return myTickets.filter(
+        (ticket) => {
+
+          const ticketTournamentId =
+            ticket.tournament?._id ||
+            ticket.tournament;
+
+
+          const ticketStatus =
+            String(
+              ticket.status || ''
+            ).toUpperCase();
+
+
+          return (
+            String(
+              ticketTournamentId
+            ) ===
+              String(
+                tournamentId
+              ) &&
+
+            ticketStatus ===
+              'RESERVED'
+          );
+
+        }
+      ).length;
+    };
 
 
   // =====================================================
@@ -194,10 +365,14 @@ function Tournaments() {
 
 
       return [
-        ...new Set(gameNames)
+        ...new Set(
+          gameNames
+        ),
       ].sort();
 
-    }, [tournaments]);
+    }, [
+      tournaments,
+    ]);
 
 
   // =====================================================
@@ -235,23 +410,22 @@ function Tournaments() {
 
 
           const matchesSearch =
+            title.includes(
+              search
+            ) ||
 
-            title.includes(search)
+            game.includes(
+              search
+            ) ||
 
-            ||
-
-            game.includes(search)
-
-            ||
-
-            description.includes(search);
+            description.includes(
+              search
+            );
 
 
           const matchesGame =
-
-            gameFilter === 'ALL'
-
-            ||
+            gameFilter ===
+              'ALL' ||
 
             tournament.game ===
               gameFilter;
@@ -268,22 +442,18 @@ function Tournaments() {
     }, [
       tournaments,
       searchTerm,
-      gameFilter
+      gameFilter,
     ]);
 
 
   // =====================================================
-  // CLEAR FILTERS
+  // CLEAR SEARCH + FILTER
   // =====================================================
 
-  const clearFilters =
-    () => {
-
-      setSearchTerm('');
-
-      setGameFilter('ALL');
-
-    };
+  const clearFilters = () => {
+    setSearchTerm('');
+    setGameFilter('ALL');
+  };
 
 
   // =====================================================
@@ -295,23 +465,38 @@ function Tournaments() {
       tournamentId
     ) => {
 
-      if (!userInfo) {
-
+      // User must login
+      if (!userInfo?.token) {
         navigate('/login');
+        return;
+      }
+
+
+      // Current number of active tickets
+      const bookedCount =
+        getReservedTicketCount(
+          tournamentId
+        );
+
+
+      // Maximum 3 tickets
+      if (bookedCount >= 3) {
+        setSuccess('');
+
+        setError(
+          'Maximum 3 tickets allowed per tournament.'
+        );
 
         return;
-
       }
 
 
       try {
-
         setReservingId(
           tournamentId
         );
 
         setError('');
-
         setSuccess('');
 
 
@@ -327,64 +512,52 @@ function Tournaments() {
         );
 
 
-        setTournaments(
-          (currentTournaments) =>
-            currentTournaments.map(
-              (tournament) => {
+        /*
+          IMPORTANT:
+          Do not manually subtract seats here.
 
-                if (
-                  tournament._id ===
-                  tournamentId
-                ) {
+          Reload latest values from MongoDB/backend.
+        */
 
-                  return {
-
-                    ...tournament,
-
-                    availableSeats:
-                      Math.max(
-                        0,
-                        tournament.availableSeats - 1
-                      )
-
-                  };
-
-                }
+        await Promise.all([
+          fetchTournaments(false),
+          fetchMyTickets(),
+        ]);
 
 
-                return tournament;
-
-              }
-            )
-        );
-
-
-      } catch (error) {
-
+      } catch (err) {
         console.error(
-          'Reservation error:',
-          error
+          'RESERVATION ERROR:',
+          err.response?.data ||
+          err.message
         );
 
 
         setError(
-          error.response?.data?.message ||
+          err.response?.data?.message ||
           'Unable to reserve ticket.'
         );
 
 
       } finally {
-
-        setReservingId(null);
-
+        setReservingId(
+          null
+        );
       }
-
     };
 
 
-  return (
+  // =====================================================
+  // PAGE
+  // =====================================================
 
+  return (
     <div className="tournaments-page">
+
+
+      {/* ===================================================
+          PAGE HEADER
+          =================================================== */}
 
       <p className="small-title">
         COMPETITIVE EVENTS
@@ -397,17 +570,18 @@ function Tournaments() {
 
 
       <p className="page-description">
-
         Discover upcoming CyberArena
         tournaments and reserve your
         place in the competition.
-
       </p>
 
 
-      {/* SEARCH + FILTER */}
+      {/* ===================================================
+          SEARCH + FILTER
+          =================================================== */}
 
       <div className="tournament-filter-panel">
+
 
         <div className="tournament-search-box">
 
@@ -419,7 +593,9 @@ function Tournaments() {
           <input
             type="text"
             placeholder="Search tournament, game or description..."
-            value={searchTerm}
+            value={
+              searchTerm
+            }
             onChange={
               (event) =>
                 setSearchTerm(
@@ -439,7 +615,9 @@ function Tournaments() {
 
 
           <select
-            value={gameFilter}
+            value={
+              gameFilter
+            }
             onChange={
               (event) =>
                 setGameFilter(
@@ -458,12 +636,14 @@ function Tournaments() {
                 (game) => (
 
                   <option
-                    value={game}
-                    key={game}
+                    value={
+                      game
+                    }
+                    key={
+                      game
+                    }
                   >
-
                     {game}
-
                   </option>
 
                 )
@@ -478,15 +658,19 @@ function Tournaments() {
         <button
           type="button"
           className="clear-filter-button"
-          onClick={clearFilters}
+          onClick={
+            clearFilters
+          }
         >
-
           CLEAR
-
         </button>
 
       </div>
 
+
+      {/* ===================================================
+          RESULT COUNT
+          =================================================== */}
 
       {
         !loading && (
@@ -496,13 +680,17 @@ function Tournaments() {
             Showing{' '}
 
             <strong>
-              {filteredTournaments.length}
+              {
+                filteredTournaments.length
+              }
             </strong>
 
             {' '}of{' '}
 
             <strong>
-              {tournaments.length}
+              {
+                tournaments.length
+              }
             </strong>
 
             {' '}tournaments
@@ -512,6 +700,10 @@ function Tournaments() {
         )
       }
 
+
+      {/* ===================================================
+          ERROR MESSAGE
+          =================================================== */}
 
       {
         error && (
@@ -524,6 +716,10 @@ function Tournaments() {
       }
 
 
+      {/* ===================================================
+          SUCCESS MESSAGE
+          =================================================== */}
+
       {
         success && (
 
@@ -534,6 +730,10 @@ function Tournaments() {
         )
       }
 
+
+      {/* ===================================================
+          LOADING
+          =================================================== */}
 
       {
         loading && (
@@ -546,9 +746,14 @@ function Tournaments() {
       }
 
 
+      {/* ===================================================
+          EMPTY RESULT
+          =================================================== */}
+
       {
         !loading &&
-        filteredTournaments.length === 0 && (
+        filteredTournaments.length ===
+          0 && (
 
           <p className="empty-message">
             No tournaments found.
@@ -558,20 +763,47 @@ function Tournaments() {
       }
 
 
+      {/* ===================================================
+          TOURNAMENT GRID
+          =================================================== */}
+
       {
         !loading &&
-        filteredTournaments.length > 0 && (
+        filteredTournaments.length >
+          0 && (
 
           <div className="tournament-grid">
+
 
             {
               filteredTournaments.map(
                 (tournament) => {
 
+
                   const image =
                     getTournamentImage(
                       tournament.game
                     );
+
+
+                  const bookedCount =
+                    getReservedTicketCount(
+                      tournament._id
+                    );
+
+
+                  const maxTicketsReached =
+                    bookedCount >= 3;
+
+
+                  const soldOut =
+                    tournament.availableSeats <=
+                    0;
+
+
+                  const isReserving =
+                    reservingId ===
+                    tournament._id;
 
 
                   return (
@@ -583,9 +815,10 @@ function Tournaments() {
                       }
                     >
 
-                      {/* =========================
+
+                      {/* ===============================
                           TOURNAMENT IMAGE
-                          ========================= */}
+                          =============================== */}
 
                       {
                         image && (
@@ -593,7 +826,9 @@ function Tournaments() {
                           <div className="tournament-image-wrapper">
 
                             <img
-                              src={image}
+                              src={
+                                image
+                              }
                               alt={
                                 tournament.game
                               }
@@ -606,40 +841,36 @@ function Tournaments() {
                       }
 
 
-                      {/* =========================
+                      {/* ===============================
                           CARD CONTENT
-                          ========================= */}
+                          =============================== */}
 
                       <div className="tournament-card-content">
 
-                        <p className="game-name">
 
+                        <p className="game-name">
                           {
                             tournament.game
                           }
-
                         </p>
 
 
                         <h2>
-
                           {
                             tournament.title
                           }
-
                         </h2>
 
 
                         <p className="tournament-description">
-
                           {
                             tournament.description
                           }
-
                         </p>
 
 
                         <div className="tournament-info">
+
 
                           <p>
 
@@ -689,19 +920,46 @@ function Tournaments() {
 
                           </p>
 
+
+                          {/* USER'S CURRENT TICKET COUNT */}
+
+                          {
+                            userInfo?.token && (
+
+                              <p className="user-ticket-count">
+
+                                <strong>
+                                  YOUR TICKETS:
+                                </strong>{' '}
+
+                                {
+                                  bookedCount
+                                }
+
+                                {' / 3'}
+
+                              </p>
+
+                            )
+                          }
+
+
                         </div>
 
 
+                        {/* ===============================
+                            RESERVE BUTTON
+                            =============================== */}
+
                         <button
                           className="reserve-button"
+
                           disabled={
-                            reservingId ===
-                              tournament._id
-
-                            ||
-
-                            tournament.availableSeats <= 0
+                            isReserving ||
+                            soldOut ||
+                            maxTicketsReached
                           }
+
                           onClick={
                             () =>
                               handleReserve(
@@ -711,19 +969,27 @@ function Tournaments() {
                         >
 
                           {
-                            tournament.availableSeats <= 0
+                            soldOut
 
                               ? 'SOLD OUT'
 
-                              : reservingId ===
-                                tournament._id
+                              : maxTicketsReached
 
-                                ? 'RESERVING...'
+                                ? 'MAX 3 TICKETS'
 
-                                : 'RESERVE TICKET'
+                                : isReserving
+
+                                  ? 'RESERVING...'
+
+                                  : userInfo?.token
+
+                                    ? `RESERVE TICKET (${bookedCount}/3)`
+
+                                    : 'RESERVE TICKET'
                           }
 
                         </button>
+
 
                       </div>
 
@@ -735,15 +1001,15 @@ function Tournaments() {
               )
             }
 
+
           </div>
 
         )
       }
 
+
     </div>
-
   );
-
 }
 
 
